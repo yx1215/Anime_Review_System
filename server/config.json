@@ -1,0 +1,10 @@
+{
+    "rds_host": "cis550exe1db.cxqoegjdozqa.us-east-1.rds.amazonaws.com",
+    "rds_port": "3306",
+    "rds_user": "yixiang",
+    "rds_password" : "952457531",
+    "rds_db": "FIFA",
+    "server_host": "127.0.0.1",
+    "server_port":"8080",
+    "project_db": "AnimeDB"
+}
