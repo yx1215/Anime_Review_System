@@ -1,0 +1,92 @@
+@font-face {
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
+}
+
+.backgroundForGamePage{
+    background-color: #FBFFFD;
+    display: flex;
+    height: 100vh;
+}
+
+.avatar img{
+    display: flex;
+    height: 70px;
+    width: 70px;
+    position: absolute;
+    top: 130px;
+    right: 80px;
+    border-radius: 50px;
+}
+
+.gameInformation{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    top: 80px;
+    position: absolute;
+    left: 80px;
+}
+
+.gameName{
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 48px;
+    margin-bottom: 100px;
+}
+
+.gameDetails{
+    display: flex;
+    height: 400px;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.gameImage img{
+    display: flex;
+    width: 337px;
+    height: 405px;
+    /*flex: 1;*/
+    justify-content: flex-start;
+    align-items: center;
+    object-fit: cover;
+}
+.gameText{
+    display: flex;
+    margin-left: 66px;
+    flex-direction: column;
+    justify-content: center;
+    right: 70px;
+}
+
+.gameComments{
+    display: flex;
+    flex-direction: column;
+}
+
+.comments{
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    /*overflow: auto;*/
+}
+.gameCommentUnit{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.gameCommentUnit img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50px;
+}
+
+.commentText{
+    margin-left: 40px;
+}

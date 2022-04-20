@@ -2,24 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f4323c7-5edc-49f0-8564-f2fe1ce55cd8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/Search.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/reportWebVitals.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/view/BrunoAceSC-Regular.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/view/Cormorant-Regular.woff" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/view/Search.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/public/football.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/public/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/public/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/MenuBar.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/fetcher.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/HomePage.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/MatchesPage.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/pages/PlayersPage.js" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/GamePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/Logo.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/image/anime.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/image/woman.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/view/GamePage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/view/Logo.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +37,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/client/src/view" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/client/src/image" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -60,10 +50,13 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/src/image" />
+      <recent name="$PROJECT_DIR$/client/public" />
       <recent name="$PROJECT_DIR$/client/src/view" />
       <recent name="$PROJECT_DIR$/client/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/client/src/image" />
       <recent name="$PROJECT_DIR$/client/src/pages" />
       <recent name="$PROJECT_DIR$/client/src" />
     </key>
@@ -97,7 +90,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650411241495</updated>
-      <workItem from="1650411245374" duration="5603000" />
+      <workItem from="1650411245374" duration="10325000" />
     </task>
     <servers />
   </component>
