@@ -1,0 +1,16 @@
+@font-face {
+    font-family: 'Bruno Ace SC Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Bruno Ace SC Regular'), url('BrunoAceSC-Regular.woff') format('woff');
+}
+
+.logo{
+    font-family: 'Bruno Ace SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 64px;
+    position: absolute;
+    right: 50px;
+    top: 30px;
+}
