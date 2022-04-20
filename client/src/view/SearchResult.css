@@ -1,0 +1,25 @@
+.searchBarSmall{
+    display: flex;
+    position: absolute;
+    top: 100px;
+}
+.inputSmall{
+    width: 400px;
+    height: 40px;
+    background: #EEF2F1;
+    border-width: 0;
+    font-size: 36px;
+}
+
+.searchButtonSmall{
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+
+    width: 193px;
+    height: 40px;
+    background: #C0D8CC;
+    border-width: 0;
+}
+
