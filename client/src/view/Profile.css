@@ -1,0 +1,80 @@
+@font-face {
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
+}
+
+.profile{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.profileAvatar{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.profileAvatar img{
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+    margin-top: 50px;
+}
+
+.profileName{
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 48px;
+    margin-top: 23px;
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    margin-left: 50px;
+    margin-bottom: 15px;
+}
+
+.typeText{
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+}
+
+.profileList{
+    display: flex;
+    flex-direction: row;
+    background: #F5FFFE;
+    margin-top: 10px;
+    padding: 17px;
+    margin-left: -50px;
+    padding-left: 50px;
+    overflow: auto;
+}
+
+.commentHistoryUnit{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.commentHistoryUnit img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin-right: 30px;
+}
+
+.commentHistoryText{
+    margin-left: 40px;
+    margin-right: 40px;
+    font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
