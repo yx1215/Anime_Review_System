@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f4323c7-5edc-49f0-8564-f2fe1ce55cd8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/SearchResult.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/view/SearchResult.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/CIS550_Database_Project.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/FilterButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/FilterButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/SearchResult.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/SearchResult.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/view/FlilterButton.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/view/FilterButton.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/view/SearchResult.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/view/SearchResult.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

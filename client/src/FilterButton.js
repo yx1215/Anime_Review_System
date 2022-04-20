@@ -1,12 +1,11 @@
 import React from 'react';
-import './view/FlilterButton.css';
+import './view/FilterButton.css';
 
-export default function FlilterButton(){
+export default function FilterButton({filterName}){
     return(
         <div className="filter_button">
-            <div className="filter">hot</div>
+            <div className="filter">{filterName}</div>
         </div>
-
     )
 }
-export { FlilterButton };
+export { FilterButton };
