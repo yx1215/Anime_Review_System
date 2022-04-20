@@ -4,21 +4,6 @@ const mysql = require('mysql');
 const express = require('express');
 const bcrypt = require("bcrypt");
 
-// async function connect() {
-//     try {
-//         return await mysql.createConnection({
-//             host: config.rds_host,
-//             user: config.rds_user,
-//             password: config.rds_password,
-//             port: config.rds_port,
-//             database: config.project_db
-//         });
-//     } catch (err) {
-//         console.log(err.message);
-//         throw err;
-//     }
-// }
-
 
 const connection = mysql.createConnection({
             host: config.rds_host,
@@ -28,11 +13,29 @@ const connection = mysql.createConnection({
             database: config.project_db
         })
 
-// connection.connect();
+connection.connect();
+// ********************************************
+//            Authentication
+// ********************************************
 
 async function homePage(req, res){
     if (req.session.login){
-        res.sendFile(__dirname + "/pages/homepage.html")
+        const userId = req.session.userId
+        const query =
+            `
+            SELECT * FROM RegisteredUser
+            WHERE userId='${userId}'
+            `
+        connection.query(query, function (error, results, fields)
+        {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        })
+        // res.sendFile(__dirname + "/pages/homepage.html")
     }
     else {
         res.redirect("/login")
@@ -66,8 +69,8 @@ async function loginHandler(req, res) {
             else {
                 if (results.length > 0){
                     req.session.login = true;
-                    req.session.username = username;
-                    res.send("Logged in!");
+                    req.session.userId = results[0].userId;
+                    res.redirect("/home")
                 } else {
                     res.send("Invalid credential.");
                 }
@@ -76,6 +79,12 @@ async function loginHandler(req, res) {
     } else {
         res.send("username and password are needed.")
     }
+}
+
+async function logout(req, res){
+    req.session.login = false
+    req.session.userId = null
+    res.redirect("/login")
 }
 
 async function registerPage(req, res){
@@ -467,291 +476,68 @@ async function all_matches(req, res) {
     }
 }
 
-// Route 4 (handler)
-async function all_players(req, res) {
-    // TODO: TASK 5: implement and test, potentially writing your own (ungraded) tests
+async function all_user(req, res){
+    let query;
     if (req.query.page && !isNaN(req.query.page)){
         const page = req.query.page;
         const pagesize = req.query.pagesize ? req.query.pagesize : 10;
-        connection.query(
-            `
-            SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-            FROM Players
-            ORDER BY Name
+        query = `
+            WITH PartialLike AS (
+                SELECT * FROM(
+                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
+                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
+                        ) as l
+                WHERE l.animeRank <= 5
+            ),
+            UserLike AS (
+                SELECT RU.nickname, RU.age, RU.gender,
+                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
+                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
+                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
+                GROUP BY RU.userId
+            )
+            SELECT * FROM UserLike
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field){
-                if (error) {
-                    console.log(error)
-                    res.json({ error: error })
-                } else if (results) {
-                    res.json({ results: results })
-            }
-            }
-        )
+            `
     }
     else {
-        connection.query(
+        query = `
+            WITH PartialLike AS (
+                SELECT * FROM(
+                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
+                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
+                        ) as l
+                WHERE l.animeRank <= 5
+            ),
+            UserLike AS (
+                SELECT RU.nickname, RU.age, RU.gender,
+                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
+                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
+                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
+                GROUP BY RU.userId
+            )
+            SELECT * FROM UserLike;
             `
-            SELECT PlayerId, Name, Nationality, OverallRating as Rating, Potential, Club, Value
-            FROM Players
-            ORDER BY Name
-            `, function (error, results, field){
-                if (error) {
-                    console.log(error)
-                    res.json({ error: error })
-                } else if (results) {
-                    res.json({ results: results })
-            }
-            }
-        )
     }
-    // return res.json({error: "Not implemented"})
-}
-
-
-// ********************************************
-//             MATCH-SPECIFIC ROUTES
-// ********************************************
-
-// Route 5 (handler)
-async function match(req, res) {
-    // TODO: TASK 6: implement and test, potentially writing your own (ungraded) tests
-    const id = req.query.id;
-    if (id){
-        connection.query(
-            `
-            SELECT MatchId, Date, Time, HomeTeam as Home, AwayTeam as Away, FullTimeGoalsH as HomeGoals, FullTimeGoalsA as AwayGoals,
-            HalfTimeGoalsH as HTHomeGoals, HalfTimeGoalsA as HTAwayGoals, ShotsH as ShotsHome, ShotsA as ShotsAway, 
-            ShotsOnTargetH as ShotsOnTargetHome, ShotsOnTargetA as ShotsOnTargetAway, FoulsH as FoulsHome, FoulsA as FoulsAway, 
-            CornersH as CornersHome, CornersA as CornersAway, YellowCardsH as YCHome, YellowCardsA as YCAway, RedCardsH as RCHome, RedCardsA as RCAway
-            FROM Matches
-            WHERE MatchId=${id}
-            `, function (error, results, field){
-                if (error){
-                    console.log(error)
-                    res.json({ error: error })
-                }
-                else {
-                    if (results){
-                        Date = results.Date
-                        res.json( {results: results})
-                    }
-                    else {
-                        res.json({results: []})
-                    }
-                }
-            }
-        )
-    }
-
-    else {
-        res.json({error: "id needed."})
-    }
-
-}
-
-// ********************************************
-//            PLAYER-SPECIFIC ROUTES
-// ********************************************
-
-// Route 6 (handler)
-async function player(req, res) {
-    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
-    const id = req.query.id
-    connection.query(
-        `
-        SELECT BestPosition
-        FROM Players
-        WHERE PlayerId='${id}'
-        `, function (error, results, field) {
-            if (results){
-                if (results[0].BestPosition === "GK") {
-                    connection.query(
-                    `
-                    SELECT PlayerId, Name, Age, Photo, Nationality, Flag, OverallRating as Rating, Potential, Club, ClubLogo,
-                    Value, Wage, InternationalReputation, Skill, JerseyNumber, ContractValidUntil, Height, Weight, BestPosition,
-                    BestOverallRating, ReleaseClause, GKPenalties, GKDiving, GKHandling, GKKicking, GKPositioning, GKReflexes
-                    FROM Players
-                    WHERE PlayerId=${id};
-                    `, function (error, results, field){
-                        if (error){
-                            console.log(error)
-                            res.json({error: error})
-                        } else {
-                            res.json({results: results})
-                        }
-
-                    }
-                )
-                }
-                else {
-                    connection.query(
-                        `SELECT PlayerId, Name, Age, Photo, Nationality, Flag, OverallRating as Rating, Potential, Club, ClubLogo,
-                         Value, Wage, InternationalReputation, Skill, JerseyNumber, ContractValidUntil, Height, Weight, BestPosition,
-                         BestOverallRating, ReleaseClause, NPassing, NBallControl, NAdjustedAgility, NStamina, NStrength, NPositioning
-                         FROM Players
-                         WHERE PlayerId=${id};
-                         `, function (error, results, field) {
-                            res.json({results: results})
-                        }
-                    )
-                }
-
-            }
-            else {
-                res.json({results: []})
+    connection.query(query,
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
             }
         }
     )
-}
 
-
-// ********************************************
-//             SEARCH ROUTES
-// ********************************************
-
-// Route 7 (handler)
-async function search_matches(req, res) {
-    // TODO: TASK 8: implement and test, potentially writing your own (ungraded) tests
-    // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
-    const Home = req.query.Home ? req.query.Home : ''
-    const Away = req.query.Away ? req.query.Away : ''
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize :10
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-                SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away,
-                FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals
-                FROM Matches
-                WHERE HomeTeam LIKE '%${Home}%' AND AwayTeam LIKE '%${Away}%'
-                ORDER BY HomeTeam, AwayTeam
-                LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
-                } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
-                }
-            }
-        )
-    }
-    else {
-        connection.query(
-            `
-                SELECT MatchId, Date, Time, HomeTeam As Home, AwayTeam AS Away,
-                       FullTimeGoalsH as HomeGoals, FullTImeGoalsA as AwayGoals
-                FROM Matches
-                WHERE HomeTeam LIKE '%${Home}%'
-                  AND AwayTeam LIKE '%${Away}%'
-                ORDER BY HomeTeam, AwayTeam
-            `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
-                } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
-                }
-            }
-        )
-    }
-
-
-}
-
-// Route 8 (handler)
-async function search_players(req, res) {
-    // TODO: TASK 9: implement and test, potentially writing your own (ungraded) tests
-    // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
-
-    const Name = req.query.Name ? req.query.Name : ''
-    const Nationality = req.query.Nationality ? req.query.Nationality : ''
-    const Club = req.query.Club ? req.query.Club : ''
-    const RatingL = req.query.RatingLow ? req.query.RatingLow : 0
-    const RatingH = req.query.RatingHigh ? req.query.RatingHigh : 100
-    const PotentialL = req.query.PotentialLow ? req.query.PotentialLow : 0
-    const PotentialH = req.query.PotentialHigh ? req.query.PotentialHigh : 100
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize :10
-    if (page && ! isNaN(page)) {
-        connection.query(
-            `
-                SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-                FROM Players
-                WHERE Name Like '%${Name}%'
-                AND Nationality LIKE '%${Nationality}%'
-                AND Club LIKE '%${Club}%'
-                And OverallRating >= ${RatingL}
-                AND OverallRating <= ${RatingH}
-                AND Potential >= ${PotentialL}
-                AND Potential <= ${PotentialH}
-                ORDER BY NAME
-                LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)}
-            `, function (error, results, field) {
-                if (error) {
-                    res.json({error: error})
-                } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
-                }
-
-            }
-        )
-    }
-    else {
-        connection.query(
-            `
-                SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-                FROM Players
-                WHERE Name Like '%${Name}%'
-                  AND Nationality LIKE '%${Nationality}%'
-                  AND Club LIKE '%${Club}%'
-                  And OverallRating >= ${RatingL}
-                  AND OverallRating <= ${RatingH}
-                  AND Potential >= ${PotentialL}
-                  AND Potential <= ${PotentialH}
-                  ORDER BY Name
-            `, function (error, results, field) {
-                if (error) {
-                    res.json({error: error})
-                } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
-                }
-
-            }
-        )
-    }
 }
 
 
 module.exports = {
-    hello,
-    jersey,
-    all_matches,
-    all_players,
-    match,
-    player,
-    search_matches,
-    search_players,
     homePage,
     loginPage,
     loginHandler,
+    logout,
     checkAuth,
     registerPage,
     registerHandler,
@@ -759,5 +545,6 @@ module.exports = {
     all_animations_separate,
     animation,
     comments,
-    search_animations
+    search_animations,
+    all_user
 }

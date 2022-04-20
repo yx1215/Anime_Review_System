@@ -69,6 +69,9 @@ app.get('/search/matches', routes.search_matches)
 // Route 8 - register as GET 
 app.get('/search/players', routes.search_players)
 
+app.get('/users', routes.all_user);
+
+app.get("/logout", routes.logout);
 
 
 
