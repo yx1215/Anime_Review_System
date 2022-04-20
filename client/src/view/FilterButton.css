@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
+}
+.filter_button{
+    background: #D8E7E5;
+    border-radius: 5px;
+
+    width: 147px;
+    height: 41px;
+    display: flex;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.filter{
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    display: flex;
+    align-items: center;
+}
