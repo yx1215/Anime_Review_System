@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0f4323c7-5edc-49f0-8564-f2fe1ce55cd8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/GamePage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/Logo.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/image/anime.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/image/woman.jpeg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/view/GamePage.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/view/Logo.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/GamePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/GamePage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/view/GamePage.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/view/GamePage.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1650411241495</updated>
-      <workItem from="1650411245374" duration="10325000" />
+      <workItem from="1650411245374" duration="10677000" />
     </task>
     <servers />
   </component>

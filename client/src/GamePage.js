@@ -30,6 +30,9 @@ export default function GamePage(){
                             tortor dignissim.</p>
 
                     </div>
+                    <div className="gameScore">
+                        7.4
+                    </div>
                 </div>
                 <div className="gameComments">
                     <div className="comments">Comments</div>
