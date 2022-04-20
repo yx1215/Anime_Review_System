@@ -54,6 +54,7 @@
     margin-left: -50px;
     padding-left: 50px;
     overflow: auto;
+    justify-content: center;
 }
 
 .commentHistoryUnit{

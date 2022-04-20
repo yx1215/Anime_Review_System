@@ -22,20 +22,13 @@ export default function Profile() {
                         <AnimeDisplayed animeImg={anime} name={"aaa"} />
                         <AnimeDisplayed animeImg={anime} name={"aaa"} />
                         <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
+
                     </div>
 
                 </div>
                 <div className="profileInfo">
                     <div className="typeText">Recent Liked</div>
                     <div className="profileList">
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
                         <AnimeDisplayed animeImg={anime} name={"aaa"} />
                         <AnimeDisplayed animeImg={anime} name={"aaa"} />
                         <AnimeDisplayed animeImg={anime} name={"aaa"} />
