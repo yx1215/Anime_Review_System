@@ -4,6 +4,7 @@ import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
 import FilterButton from './FilterButton';
+
 export default function SearchResult(){
     return(
         <div className="backgroundForGamePage">

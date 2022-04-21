@@ -1,9 +1,31 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/GamePage.css';
+import axios from 'axios';
 import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
+
+let animeId = null;
+const link = 'http://localhost:5000';
+
+async function getGameInfo(id){
+    const info = await axios.get(`${link}/animation?id=${id}`).catch((err) => { console.log(err); });
+    return info.data;
+}
+
 export default function GamePage(){
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    animeId = params.get('id');
+    const [info, setInfo] = useState({});
+
+    useEffect(()=>{
+        getGameInfo(animeId).then((result) => {
+            setInfo(result);
+            console.log(info);
+        });
+    }, [])
+
     return(
         <div className="backgroundForGamePage">
             <Logo />
