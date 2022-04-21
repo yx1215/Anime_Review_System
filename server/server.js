@@ -34,6 +34,14 @@ app.get('/register', routes.registerPage);
 
 app.post('/register', routes.registerHandler);
 
+app.get('/animations/all', routes.all_animations);
+
+app.get('/animations/separate', routes.all_animations_separate);
+
+app.get('/animation', routes.animation);
+
+app.get('/comments', routes.comments);
+
 // homework routes
 // Route 1 - register as GET 
 app.get('/hello', routes.hello)

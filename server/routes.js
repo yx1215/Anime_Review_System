@@ -120,9 +120,181 @@ async function registerHandler(req, res){
     }
 }
 
+// ********************************************
+//          ANIMATIONS RELATED ROUTE
+// ********************************************
+// animations/all route: return anime information with all grouped genres + producers
+async function all_animations(req, res) {
+    if (req.query.page && !isNaN(req.query.page)) {
+        const page = req.query.page;
+        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
+        connection.query(`
+            SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                 Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID
+            ORDER BY A2.title, A2.score DESC
+            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
+        `, function (error, results, fields){
+            if (error){
+                console.log(error)
+                res.json({ error: error })
+            } else if (results){
+                res.json({ results: results })
+            }
+        }
+        )
+    } else {
+        connection.query(`
+            SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID
+            ORDER BY A2.title, A2.score DESC
+        `, function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        });
+    }
+}
 
+async function all_animations_separate(req, res) {
+    if (req.query.page && !isNaN(req.query.page)) {
+        const page = req.query.page;
+        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
+        connection.query(`
+            SELECT A.animeId, A.title, A.age_rate, A.aired, A.type, A.score, A.img_url, G.genreName AS genre, D.producerName AS producer 
+            FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                         JOIN Genre G ON B.genreId = G.genreId
+                         JOIN Produces P ON A.animeID = P.animeID
+                         JOIN Producer D ON P.producerId = D.producerId 
+            ORDER BY A.title, A.score DESC
+            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
+        `, function (error, results, fields){
+            if (error){
+                console.log(error)
+                res.json({ error: error })
+            } else if (results){
+                res.json({ results: results })
+            }
+        }
+        )
+    } else {
+        connection.query(`
+            SELECT A.animeId, A.title, A.age_rate, A.aired, A.type, A.score, A.img_url, G.genreName AS genre, D.producerName AS producer 
+            FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                         JOIN Genre G ON B.genreId = G.genreId
+                         JOIN Produces P ON A.animeID = P.animeID
+                         JOIN Producer D ON P.producerId = D.producerId 
+            ORDER BY A.title, A.score DESC
+        `, function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        });
+    }
+}
 
+// ********************************************
+//          ANIMATIO SPECIFIC ROUTE
+// ********************************************
 
+async function animation(req, res) {
+    const animeid = req.query.id;
+    if (animeid){
+        console.log(animeid)
+        connection.query(
+            `
+            SELECT A2.animeId, A2.title, A2.synopsis, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                 Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid}
+            `, function (error, results, field){
+                if (error){
+                    console.log(error)
+                    res.json({ error: error })
+                }
+                else {
+                    if (results){
+                        res.json( {results: results})
+                    }
+                    else {
+                        res.json({results: []})
+                    }
+                }
+            }
+        )
+    }
+
+    else {
+        res.json({error: "id needed."})
+    }
+
+}
+
+async function comments(req, res) {
+    const animeid = req.query.id;
+    if (animeid){
+        console.log(animeid)
+        connection.query(
+            `
+            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating 
+            FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId 
+                         JOIN RegisteredUser RU ON R.userId = RU.userId 
+            WHERE A.animeID = ${animeid} 
+            `, function (error, results, field){
+                if (error){
+                    console.log(error)
+                    res.json({ error: error })
+                }
+                else {
+                    if (results){
+                        res.json( {results: results})
+                    }
+                    else {
+                        res.json({results: []})
+                    }
+                }
+            }
+        )
+    }
+
+    else {
+        res.json({error: "id needed."})
+    }
+
+}
 
 
 // ********************************************
@@ -507,5 +679,9 @@ module.exports = {
     loginHandler,
     checkAuth,
     registerPage,
-    registerHandler
+    registerHandler,
+    all_animations,
+    all_animations_separate,
+    animation,
+    comments
 }
