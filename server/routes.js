@@ -269,7 +269,7 @@ async function comments(req, res) {
         console.log(animeid)
         connection.query(
             `
-            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating 
+            SELECT DISTINCT A.animeId, RU.userId, RU.nickname, R.comments, R.rating 
             FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId 
                          JOIN RegisteredUser RU ON R.userId = RU.userId 
             WHERE A.animeID = ${animeid} 
@@ -296,7 +296,82 @@ async function comments(req, res) {
 
 }
 
+async function search_animations(req, res) {
+    const title = req.query.Title ? req.query.Title : ''
+    const synopsis = req.query.Synopsis ? req.query.Synopsis : ''
+    const genre = req.query.Genre ? req.query.Genre : ''
+    const producer = req.query.Producer ? req.query.Producer: ''
+    const page = req.query.page
+    const pagesize = req.query.pagesize ? req.query.pagesize :10
+    console.log(title)
+    if (page && !isNaN(page)) {
+        connection.query(
+            `
+            SELECT A2.animeId, A2.title, A2.synopsis, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                 Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
+                  A2.title LIKE '%${title}%' AND A2.synopsis LIKE '%${synopsis}%' AND 
+                  AG.genres LIKE '%${genre}%' AND AP.producers LIKE '%${producer}%'
+            ORDER BY A2.score DESC, A2.title
+            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
+            `, function (error, results, field) {
+                if (error) {
+                    console.log(error)
+                    res.json({error: error})
+                } else {
+                    if (results) {
+                        res.json({results: results})
+                    } else {
+                        res.json({results: []})
+                    }
+                }
+            }
+        )
+    }
+    else {
+        connection.query(
+            `
+            SELECT A2.animeId, A2.title, A2.synopsis, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                 Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
+                  A2.title LIKE '%${title}%' AND A2.synopsis LIKE '%${synopsis}%' AND 
+                  AG.genres LIKE '%${genre}%' AND AP.producers LIKE '%${producer}%'
+            ORDER BY A2.score DESC, A2.title;
+            `, function (error, results, field) {
+                if (error) {
+                    console.log(error)
+                    res.json({error: error})
+                } else {
+                    if (results) {
+                        res.json({results: results})
+                    } else {
+                        res.json({results: []})
+                    }
+                }
+            }
+        )
+    }
 
+
+}
 // ********************************************
 //            HOMEWORK ROUTE EXAMPLE
 // ********************************************
@@ -683,5 +758,6 @@ module.exports = {
     all_animations,
     all_animations_separate,
     animation,
-    comments
+    comments,
+    search_animations
 }

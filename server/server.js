@@ -42,6 +42,8 @@ app.get('/animation', routes.animation);
 
 app.get('/comments', routes.comments);
 
+app.get('/search/animations', routes.search_animations);
+
 // homework routes
 // Route 1 - register as GET 
 app.get('/hello', routes.hello)
