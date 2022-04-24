@@ -1,11 +1,55 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/SearchResult.css';
 import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
 import FilterButton from './FilterButton';
+import axios from "axios";
+import ResultUnit from "./resultUnit";
+
+
+const link = 'http://localhost:8080';
+let animeTitle;
+let animeGenre;
+let animeProducer;
+let animeSynopsis;
+async function getGame(){
+    let url = `${link}/search/animations?`;
+    let pool = [];
+    if (animeTitle){
+        pool.push(`Title=${animeTitle}`);
+    }
+    if(animeGenre){
+        pool.push(`Genre=${animeGenre}`);
+    }
+    if (animeProducer){
+        pool.push(`Producer=${animeProducer}`);
+    }
+    if (animeSynopsis){
+        pool.push(`Synopsis=${animeSynopsis}`);
+    }
+    let stringy = pool.join("&");
+    url +=stringy;
+    const info = await axios.get(url).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
 
 export default function SearchResult(){
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    animeTitle = params.get('Title');
+    animeGenre = params.get('Genre');
+    animeProducer = params.get('Producer');
+    animeSynopsis = params.get('Synopsis');
+    const [game, setGame] = useState([]);
+
+    useEffect(()=>{
+        getGame().then((result)=>{
+            setGame(result);
+        })
+    },[])
+
     return(
         <div className="backgroundForGamePage">
             <Logo />
@@ -13,10 +57,9 @@ export default function SearchResult(){
                 <img src={avatar} />
             </div>
             <div>
-
                 <div className="searchGroup">
                     <div className="searchBarSmall">
-                        <input className="inputSmall"/>
+                        <input className="inputSmall" />
                         <button className="searchButtonSmall">find your love</button>
                     </div>
                     <div className="searchFilter">
@@ -39,66 +82,9 @@ export default function SearchResult(){
                     </div>
                 </div>
                 <div className="searchResult">
-                    <div className="resultUnit">
-                        <div className="resultImg">
-                            <img src={anime} />
-                        </div>
-                        <div className="resultInfo">
-                            <h4>Lorem ipsum dolor sit ame</h4>
-                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum...
-                        </div>
-                    </div>
-                    <div className="resultUnit">
-                        <div className="resultImg">
-                            <img src={anime} />
-                        </div>
-                        <div className="resultInfo">
-                            <h4>Lorem ipsum dolor sit ame</h4>
-                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum...
-                        </div>
-                    </div>
-                    <div className="resultUnit">
-                        <div className="resultImg">
-                            <img src={anime} />
-                        </div>
-                        <div className="resultInfo">
-                            <h4>Lorem ipsum dolor sit ame</h4>
-                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum...
-                        </div>
-                    </div>
-                    <div className="resultUnit">
-                        <div className="resultImg">
-                            <img src={anime} />
-                        </div>
-                        <div className="resultInfo">
-                            <h4>Lorem ipsum dolor sit ame</h4>
-                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum...
-                        </div>
-                    </div>
-                    <div className="resultUnit">
-                        <div className="resultImg">
-                            <img src={anime} />
-                        </div>
-                        <div className="resultInfo">
-                            <h4>Lorem ipsum dolor sit ame</h4>
-                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
-                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum...
-                        </div>
-                    </div>
+                    {(game != null && game.map((one) => (
+                        <ResultUnit gameObj={one}/>
+                        )))}
                 </div>
             </div>
         </div>
