@@ -92,8 +92,11 @@ async function registerPage(req, res){
 }
 
 async function registerHandler(req, res){
+    console.log("enter: "+JSON.stringify(req.body));
+
     const username = req.body.username
     const password = req.body.password
+    console.log("username: "+username);
     if (username && password){
         const checkExistQuery = `SELECT userId, password FROM RegisteredUser
                                  WHERE nickname='${username}'`

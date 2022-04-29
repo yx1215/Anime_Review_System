@@ -22,11 +22,11 @@ export default function Login() {
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text">login</div>
+                    <div className="text">Forget password</div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
-                    <div className="text">register</div>
+                    <div className="text">Register</div>
                     <div className="line"></div>
                 </div>
             </div>

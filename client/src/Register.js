@@ -1,7 +1,53 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/Register.css'
 import Logo from './Logo';
+import axios from "axios";
+
+const link = 'http://localhost:8080';
+// let username;
+// let password;
+
 export default function Register() {
+    // let search = window.location.search;
+    // let params = new URLSearchParams(search);
+    // username = params.get('username');
+    // password = params.get('password');
+    const [acct, setAcct] = useState({
+        username: "",
+        password: ""});
+
+    // useEffect(()=>{
+    //     // if(document.getElementsByName("uname")[0].value && document.getElementsByName("psw")[0].value){
+    //     //     setAcct({uname: document.getElementsByName("uname")[0].value,
+    //     //     psw: document.getElementsByName("psw")[0].value});
+    //     // }
+    // },)
+    async function sendRegister(acct) {
+        // eslint-disable-next-line no-return-await
+        console.log(acct);
+        return await axios.post(`${link}/register`, { here:'fff' });
+    }
+
+    async function handleNameSubmit(e) {
+        e.preventDefault();
+        console.log(`${link}/register1`);
+        return sendRegister(acct).then((value) => {
+            console.log(value);
+        }).catch((err) => { console.log(err); });;
+    }
+
+    function handleUNameChange(e) {
+        acct.username = e;
+        console.log(acct);
+        return e;
+    }
+
+    function handlePSWChange(e) {
+        acct.password = e;
+        console.log(acct);
+        return e;
+    }
+
     return (
         <div className="body">
             <Logo />
@@ -9,20 +55,27 @@ export default function Register() {
                 Register
             </div>
             <div className="Register">
+                <form onSubmit={handleNameSubmit}>
+                {/*<form method="POST" action="/register">*/}
+                    <label className="User" for="uname"><b>Username</b></label>
+                    <input type="text" name="username" required onChange={(e) => { handleUNameChange(e.target.value); }} />
 
-                <label className="User" for="uname"><b>Username</b></label>
-                <input type="text" name="uname" required />
+                    <label className="User" for="psw"><b>Password</b></label>
+                    <input type="password" name="password" required onChange={(e) => { handlePSWChange(e.target.value); }} />
 
-                <label className="User" for="psw"><b>Password</b></label>
-                <input type="password" name="psw" required />
-
-                <button className="registerButton">Register</button>
+                    <div><button type="submit" className="registerButton" value="register">Register</button></div>
+                </form>
+                {/*<form method="POST" action="/register">*/}
+                {/*    Name: <input type="text" name="username"/><br/>*/}
+                {/*    Password: <input type="password" name="password"/><br/>*/}
+                {/*    <input type="submit" value="register"/>*/}
+                {/*</form>*/}
 
             </div>
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text">Account log in</div>
+                    <div className="text" id="longSentence">Have account already? Login</div>
                     <div className="line"></div>
                 </div>
             </div>
