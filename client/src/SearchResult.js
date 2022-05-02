@@ -13,7 +13,7 @@ let animeTitle;
 let animeGenre;
 let animeProducer;
 let animeSynopsis;
-// let searchUrl;
+
 async function getGame(){
     let url = `${link}/search/animations?`;
     let pool = [];

@@ -44,6 +44,12 @@ app.get('/comments', routes.comments);
 
 app.get('/search/animations', routes.search_animations);
 
+app.get('/all_users', routes.all_user);
+
+app.get('/search/users', routes.search_users);
+
+app.get('/search/single_user', routes.find_single_user)
+
 // homework routes
 // Route 1 - register as GET 
 // app.get('/hello', routes.hello)
@@ -72,8 +78,6 @@ app.get('/search/animations', routes.search_animations);
 app.get('/users', routes.all_user);
 
 app.get("/logout", routes.logout);
-
-
 
 
 app.listen(config.server_port, () => {

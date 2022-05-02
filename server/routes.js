@@ -387,99 +387,8 @@ async function search_animations(req, res) {
 
 }
 // ********************************************
-//            HOMEWORK ROUTE EXAMPLE
-// ********************************************
-
-// Route 1 (handler)
-async function hello(req, res) {
-    // a GET request to /hello?name=Steve
-    if (req.query.name) {
-        res.send(`Hello, ${req.query.name}! Welcome to the FIFA server!`)
-    } else {
-        res.send(`Hello! Welcome to the FIFA server!`)
-    }
-}
-
-
-// ********************************************
-//                  WARM UP 
-// ********************************************
-
-// Route 2 (handler)
-async function jersey(req, res) {
-    const colors = ['red', 'blue']
-    const jersey_number = Math.floor(Math.random() * 20) + 1
-    const name = req.query.name ? req.query.name : "player"
-
-    if (req.params.choice === 'number') {
-        // TODO: TASK 1: inspect for issues and correct 
-        res.json({ message: `Hello, ${name}!`, jersey_number: jersey_number })
-    } else if (req.params.choice === 'color') {
-        var lucky_color_index = Math.floor(Math.random() * 2);
-        // TODO: TASK 2: change this or any variables above to return only 'red' or 'blue' at random (go Quakers!)
-        res.json({ message: `Hello, ${name}!`, jersey_color: colors[lucky_color_index] })
-    } else {
-        // TODO: TASK 3: inspect for issues and correct
-        res.json({ message: `Hello, ${name}, we like your jersey!` })
-    }
-}
-
-// ********************************************
 //               GENERAL ROUTES
 // ********************************************
-
-
-// Route 3 (handler)
-async function all_matches(req, res) {
-    // TODO: TASK 4: implement and test, potentially writing your own (ungraded) tests
-    // We have partially implemented this function for you to 
-    // parse in the league encoding - this is how you would use the ternary operator to set a variable to a default value
-    // we didn't specify this default value for league, and you could change it if you want! 
-    // in reality, league will never be undefined since URLs will need to match matches/:league for the request to be routed here... 
-    const league = req.params.league ? req.params.league : 'D1'
-    // use this league encoding in your query to furnish the correct results
-
-    if (req.query.page && !isNaN(req.query.page)) {
-        // This is the case where page is defined.
-        // The SQL schema has the attribute OverallRating, but modify it to match spec! 
-        // TODO: query and return results here:
-        const page = req.query.page;
-        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
-        connection.query(`
-            SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals  
-            FROM Matches 
-            WHERE Division = '${league}'
-            ORDER BY HomeTeam, AwayTeam
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-        `, function (error, results, fields){
-            if (error){
-                console.log(error)
-                res.json({ error: error })
-            } else if (results){
-                res.json({ results: results })
-            }
-        }
-
-        )
-   
-    } else {
-        // we have implemented this for you to see how to return results by querying the database
-        connection.query(`
-        SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals  
-        FROM Matches 
-        WHERE Division = '${league}'
-        ORDER BY HomeTeam, AwayTeam
-        `, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
-}
 
 async function all_user(req, res){
     let query;
@@ -534,7 +443,94 @@ async function all_user(req, res){
             }
         }
     )
+}
 
+async function search_users(req, res){
+    const nickname = req.query.nickname
+    let query;
+    if (req.query.page && !isNaN(req.query.page)){
+        const page = req.query.page;
+        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
+        query = `
+            WITH PartialLike AS (
+                SELECT * FROM(
+                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
+                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
+                        ) as l
+                WHERE l.animeRank <= 5
+            ),
+            UserLike AS (
+                SELECT RU.nickname, RU.age, RU.gender,
+                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
+                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
+                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
+                GROUP BY RU.userId
+            )
+            SELECT * FROM UserLike
+            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
+            `
+    }
+    else {
+        query = `
+            WITH PartialLike AS (
+                SELECT * FROM(
+                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
+                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
+                        ) as l
+                WHERE l.animeRank <= 5
+            ),
+            UserLike AS (
+                SELECT RU.nickname, RU.age, RU.gender,
+                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
+                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
+                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
+                GROUP BY RU.userId
+            )
+            SELECT * FROM UserLike WHERE nickname LIKE '%${nickname}%';
+            `
+    }
+    connection.query(query,
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else if (results) {
+                res.json({ results: results })
+            }
+        }
+    )
+}
+
+async function find_single_user(req, res){
+    const userId = req.query.userId
+    let query = `
+    WITH PartialLike AS (
+                SELECT * FROM(
+                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
+                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
+                        ) as l
+                WHERE l.animeRank <= 5
+            ),
+            UserLike AS (
+                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
+                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
+                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
+                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
+                GROUP BY RU.userId
+            )
+            SELECT * FROM UserLike NATURAL JOIN ReviewedBy WHERE userId=${userId};
+    `
+    connection.query(query,
+        function(error, results, fields){
+            if (error){
+                console.log(error)
+                res.json({error: error})
+            } else {
+                res.json({results: results})
+            }
+        }
+
+        )
 }
 
 
@@ -551,5 +547,7 @@ module.exports = {
     animation,
     comments,
     search_animations,
-    all_user
+    all_user,
+    search_users,
+    find_single_user,
 }
