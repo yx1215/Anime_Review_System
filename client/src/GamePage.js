@@ -4,6 +4,7 @@ import axios from 'axios';
 import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
+import Rating from 'react-star-rating-lite';
 
 let animeId = null;
 const link = 'http://localhost:8080';
@@ -69,12 +70,14 @@ export default function GamePage(){
                     <div className="comments">Comments</div>
                     {(comments != null && comments.map((one) => (
                         <div className="gameCommentUnit" onClick={() => { getUserInfo(one.userId); }}>
-                            <div>
-                                <img src={avatar}/>
-                                <div>{one.nickname}</div>
+                            <div className="userCol">
+                                {/*<img src={avatar}/>*/}
+                                <div style={{fontWeight: "bold", fontSize: "25px"}}>{one.nickname}</div>
+                                <Rating value={one.rating/2} weight="20px" readonly/>
                             </div>
                             <div className="commentText">
                                 {one.comments}
+
                             </div>
                         </div>
                     )))}

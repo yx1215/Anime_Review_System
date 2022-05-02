@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import './view/Profile.css'
 import Logo from './Logo';
-import avatar from "./image/woman.jpeg";
+import female from "./image/woman.jpeg";
+import male from "./image/male.jpeg";
+import unknown from "./image/unknown.jpeg";
 import anime from './image/anime.jpeg';
 import AnimeDisplayed from "./AnimeDisplayedUnit";
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 
 let userId;
+let avatar;
 const link = 'http://localhost:8080';
 
 async function getUserInfo(id){
@@ -37,6 +40,13 @@ export default function Profile() {
     useEffect(()=>{
         getUserInfo(userId).then((result) => {
             setInfo(result);
+            if(result.gender==="Male"){
+                avatar=male;
+            }else if(result.gender==="Female"){
+                avatar=female;
+            }else{
+                avatar=unknown;
+            }
             setAnimeInfo(setupAnimes(result.likeAnime, result.likeAnimeImg));
         });
     }, [])
@@ -47,7 +57,7 @@ export default function Profile() {
             <Logo />
             <div className="profile">
                 <div className="profileAvatar">
-                    <img src={avatar} />
+                   <img src={avatar} />
                     <div className="profileName">{info.nickname}</div>
                 </div>
                 <div className="profileInfo">
