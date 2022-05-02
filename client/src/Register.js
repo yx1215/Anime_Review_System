@@ -16,24 +16,21 @@ export default function Register() {
         username: "",
         password: ""});
 
-    // useEffect(()=>{
-    //     // if(document.getElementsByName("uname")[0].value && document.getElementsByName("psw")[0].value){
-    //     //     setAcct({uname: document.getElementsByName("uname")[0].value,
-    //     //     psw: document.getElementsByName("psw")[0].value});
-    //     // }
-    // },)
     async function sendRegister(acct) {
         // eslint-disable-next-line no-return-await
         console.log(acct);
-        return await axios.post(`${link}/register`, { here:'fff' });
+        return await axios.post(`${link}/register`, `username=${acct.username}&password=${acct.password}`);
     }
 
     async function handleNameSubmit(e) {
         e.preventDefault();
-        console.log(`${link}/register1`);
+        console.log(`${link}/register`);
         return sendRegister(acct).then((value) => {
-            console.log(value);
-        }).catch((err) => { console.log(err); });;
+            alert(value.data);
+            if(value.data==="Register complete."){
+                window.location.replace("/login");
+            }
+        }).catch((err) => { console.log(err); });
     }
 
     function handleUNameChange(e) {
@@ -56,7 +53,6 @@ export default function Register() {
             </div>
             <div className="Register">
                 <form onSubmit={handleNameSubmit}>
-                {/*<form method="POST" action="/register">*/}
                     <label className="User" for="uname"><b>Username</b></label>
                     <input type="text" name="username" required onChange={(e) => { handleUNameChange(e.target.value); }} />
 
@@ -65,17 +61,11 @@ export default function Register() {
 
                     <div><button type="submit" className="registerButton" value="register">Register</button></div>
                 </form>
-                {/*<form method="POST" action="/register">*/}
-                {/*    Name: <input type="text" name="username"/><br/>*/}
-                {/*    Password: <input type="password" name="password"/><br/>*/}
-                {/*    <input type="submit" value="register"/>*/}
-                {/*</form>*/}
-
             </div>
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text" id="longSentence">Have account already? Login</div>
+                    <div className="text" id="longSentence"><a href="/login">Have account already? Login</a></div>
                     <div className="line"></div>
                 </div>
             </div>

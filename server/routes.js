@@ -70,7 +70,7 @@ async function loginHandler(req, res) {
                 if (results.length > 0){
                     req.session.login = true;
                     req.session.userId = results[0].userId;
-                    res.redirect("/home")
+                    res.send("log in successfully!");
                 } else {
                     res.send("Invalid credential.");
                 }
