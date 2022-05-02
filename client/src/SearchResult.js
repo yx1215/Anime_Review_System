@@ -48,6 +48,15 @@ export default function SearchResult(){
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
     const [searchUrl, setSearchUrl] = useState("");
+    // const [filter, setFilter] = useState({
+    //     Title: null,
+    //     Genre: null,
+    //     Producer: null,
+    //     New: null,
+    //     Rated: null,
+    //     Viewed: null,
+    //     Trending: null
+    // });
     // var selected = document.forms[0].genre;
     // var selected2 = document.forms[1].genre.selectedIndex;
     // console.log(selected+";"+selected2);
@@ -55,19 +64,32 @@ export default function SearchResult(){
     useEffect(()=>{
         getGame().then((result)=>{
             setGame(result);
-        })
-
+            if(animeTitle){
+                setInput("Title="+animeTitle+";");
+                // filter.Title=animeTitle;
+            }
+            if(animeGenre){
+                // filter.Genre = animeGenre;
+                setInput(prevState => prevState+"Genre="+animeGenre+";");
+            }
+            if(animeProducer){
+                // filter.Producer = animeProducer;
+                setInput(prevState => prevState+"Producer="+animeProducer+";");
+            }
+        });
     },[])
 
     function handleGenre(e){
         console.log(e.target.value);
         setGenre(e.target.value);
+        // filter.Genre = e.target.value;
         setInput(input+"Genre="+e.target.value+";");
     }
 
     function handleProducer(e){
         setProducer(e.target.value);
         console.log(e.target.value);
+        // filter.Producer = e.target.value;
         setInput(input+"Producer="+e.target.value+";");
     }
 
@@ -92,6 +114,11 @@ export default function SearchResult(){
         console.log(temp);
         window.location.replace(`/searchResult?${temp}`);
     }
+
+    function findUser(){
+        setInput("User=");
+    }
+
     return(
         <div className="backgroundForGamePage">
             <Logo />
@@ -105,10 +132,15 @@ export default function SearchResult(){
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
+
                         <FilterButton filterName="Trending"/>
                         <FilterButton filterName="Most Viewed"/>
                         <FilterButton filterName="Highly Rated"/>
                         <FilterButton filterName="New"/>
+                        {/*<FilterButton filterName="User"/>*/}
+                        <div className="filter_button" onClick={findUser}>
+                            <div className="filter">User</div>
+                        </div>
                         <div className="filter_button">
                             <select name="genre" id="genre" onChange={handleProducer}>
                                     <option value="Producer">Producer</option>
