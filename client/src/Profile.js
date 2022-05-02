@@ -1,43 +1,68 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/Profile.css'
 import Logo from './Logo';
 import avatar from "./image/woman.jpeg";
 import anime from './image/anime.jpeg';
 import AnimeDisplayed from "./AnimeDisplayedUnit";
+import axios from "axios";
+import ResultUnit from "./resultUnit";
+
+let userId;
+const link = 'http://localhost:8080';
+
+async function getUserInfo(id){
+    const info = await axios.get(`${link}/search/single_user?userId=${id}`).catch((err) => { console.log(err); });
+    return info.data.results[0];
+}
+
+function setupAnimes(nameList, imgList){
+    var nList = nameList.split(",");
+    var iList = imgList.split(",");
+    var result = [];
+    for(var i = 0; i< nList.length; i++){
+        result.push({
+            name:nList[i].trim(),
+            img: iList[i].trim()
+        })
+    }
+    console.log(result);
+    return result;
+}
 export default function Profile() {
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    userId = params.get('userId');
+    const [info, setInfo] = useState({});
+    const [animeInfo, setAnimeInfo] = useState([]);
+    useEffect(()=>{
+        getUserInfo(userId).then((result) => {
+            setInfo(result);
+            setAnimeInfo(setupAnimes(result.likeAnime, result.likeAnimeImg));
+        });
+    }, [])
+    console.log(info);
+
     return (
         <div className="body">
             <Logo />
             <div className="profile">
                 <div className="profileAvatar">
                     <img src={avatar} />
-                    <div className="profileName">Ac placerat</div>
-                </div>
-                <div className="profileInfo">
-                    <div className="typeText">Recent Watched</div>
-                    <div className="profileList">
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-
-                    </div>
-
+                    <div className="profileName">{info.nickname}</div>
                 </div>
                 <div className="profileInfo">
                     <div className="typeText">Recent Liked</div>
                     <div className="profileList">
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
-                        <AnimeDisplayed animeImg={anime} name={"aaa"} />
+                        {(animeInfo != null && animeInfo.map((one) => (
+                            <AnimeDisplayed animeImg={one.img} name={one.name} />
+                        )))}
+                        {/*{(info!=={}&&[...Array(3)].map((x, i) =>*/}
+                        {/*    <AnimeDisplayed animeImg={anime} name={info.likeAnime[i]} />*/}
+                        {/*))}*/}
                     </div>
 
                 </div>
+
                 <div className="profileInfo">
                     <div className="typeText">Recent Commented</div>
                     <div className="commentHistoryUnit">

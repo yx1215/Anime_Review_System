@@ -19,6 +19,10 @@ async function getGameComments(id){
     return info.data.results;
 }
 
+function getUserInfo(id){
+    window.location.replace(`/profile?userId=${id}`);
+}
+
 export default function GamePage(){
     let search = window.location.search;
     let params = new URLSearchParams(search);
@@ -64,20 +68,18 @@ export default function GamePage(){
                 <div className="gameComments">
                     <div className="comments">Comments</div>
                     {(comments != null && comments.map((one) => (
-                        <div className="gameCommentUnit">
+                        <div className="gameCommentUnit" onClick={() => { getUserInfo(one.userId); }}>
                             <div>
                                 <img src={avatar}/>
                                 <div>{one.nickname}</div>
                             </div>
-                        <div className="commentText">
-                            {one.comments}
-                        </div>
+                            <div className="commentText">
+                                {one.comments}
+                            </div>
                         </div>
                     )))}
                 </div>
             </div>
-
-
         </div>
 
     )
