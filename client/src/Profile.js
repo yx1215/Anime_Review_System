@@ -37,6 +37,9 @@ export default function Profile() {
     userId = params.get('userId');
     const [info, setInfo] = useState({});
     const [animeInfo, setAnimeInfo] = useState([]);
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
     useEffect(()=>{
         getUserInfo(userId).then((result) => {
             setInfo(result);

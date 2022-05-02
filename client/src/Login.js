@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './view/Login.css'
 import Logo from './Logo';
 import axios from "axios";
+import { ReactSession }  from 'react-client-session';
 
 const link = 'http://localhost:8080';
 export default function Login() {
@@ -21,7 +22,9 @@ export default function Login() {
         console.log(`${link}/login`);
         return sendRegister(acct).then((value) => {
             alert(value.data);
+            console.log(value);
             if(value.data==="log in successfully!"){
+                window.sessionStorage.setItem("username", acct.username);
                 window.location.replace(`/`);
             }
         }).catch((err) => {

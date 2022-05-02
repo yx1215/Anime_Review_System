@@ -1,21 +1,20 @@
 import React, {useEffect} from 'react';
 import './view/Search.css'
 import axios from "axios";
+import {ReactSession} from "react-client-session";
 
 const link = 'http://localhost:8080';
 
-async function helper(){
-    return await axios.get(`${link}/`).catch((err) => { console.log(err); });
-}
+// async function helper(){
+//     return await axios.get(`${link}/`).catch((err) => { console.log(err); });
+// }
 export default function Search(){
     useEffect(()=>{
-        helper().then((result) => {
-            if(result.data==="please log in first!"){
-                alert(result.data);
-                window.location.replace("/login");
-            }
-        });
-    })
+
+    },[])
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
     return(
         <div className="body">
             <div className="title">
