@@ -31,6 +31,10 @@ export default function GamePage(){
     const [info, setInfo] = useState({});
     const [comments, setComments] = useState([]);
 
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
+
     useEffect(()=>{
         getGameInfo(animeId).then((result) => {
             setInfo(result);

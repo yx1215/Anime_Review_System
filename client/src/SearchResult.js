@@ -48,6 +48,9 @@ export default function SearchResult(){
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
     const [searchUrl, setSearchUrl] = useState("");
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
     // const [filter, setFilter] = useState({
     //     Title: null,
     //     Genre: null,
