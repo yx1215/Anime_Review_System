@@ -26,7 +26,7 @@ app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 
 app.post('/login', routes.loginHandler);
 
-app.get('/home', routes.checkAuth, routes.homePage);
+app.get('/', routes.checkAuth, routes.homePage);
 
 app.get('/login', routes.loginPage);
 

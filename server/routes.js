@@ -47,12 +47,14 @@ async function loginPage(req, res){
 }
 
 async function checkAuth(req, res, next){
+    console.log(req.session);
     if (req.session.login){
+        console.log("enter");
         next();
     }
     else {
         // if not login, redirect to login page.
-        res.redirect("/login")
+        res.send("please log in first!");
     }
 
 }
