@@ -26,7 +26,7 @@ app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 
 app.post('/login', routes.loginHandler);
 
-app.get('/home', routes.checkAuth, routes.homePage);
+app.get('/', routes.checkAuth, routes.homePage);
 
 app.get('/login', routes.loginPage);
 
@@ -44,13 +44,12 @@ app.get('/comments', routes.comments);
 
 app.get('/search/animations', routes.search_animations);
 
-<<<<<<< HEAD
 app.get('/all_users', routes.all_user);
 
 app.get('/search/users', routes.search_users);
 
 app.get('/search/single_user', routes.find_single_user)
-=======
+
 // homework routes
 // Route 1 - register as GET 
 // app.get('/hello', routes.hello)
@@ -77,7 +76,6 @@ app.get('/search/single_user', routes.find_single_user)
 // app.get('/search/players', routes.search_players)
 
 app.get('/users', routes.all_user);
->>>>>>> add serach result and link to game detail page
 
 app.get("/logout", routes.logout);
 

@@ -65,7 +65,10 @@ export default function GamePage(){
                     <div className="comments">Comments</div>
                     {(comments != null && comments.map((one) => (
                         <div className="gameCommentUnit">
-                        <img src={avatar}/>
+                            <div>
+                                <img src={avatar}/>
+                                <div>{one.nickname}</div>
+                            </div>
                         <div className="commentText">
                             {one.comments}
                         </div>

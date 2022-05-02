@@ -126,3 +126,7 @@ input[type=password] {
     border: 1px solid #000000;
     align-items: center;
 }
+
+#longSentence{
+    font-size: 25px;
+}

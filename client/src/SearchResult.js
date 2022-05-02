@@ -13,6 +13,7 @@ let animeTitle;
 let animeGenre;
 let animeProducer;
 let animeSynopsis;
+
 async function getGame(){
     let url = `${link}/search/animations?`;
     let pool = [];
@@ -43,13 +44,54 @@ export default function SearchResult(){
     animeProducer = params.get('Producer');
     animeSynopsis = params.get('Synopsis');
     const [game, setGame] = useState([]);
+    const [genre, setGenre] = useState(null);
+    const [producer, setProducer] = useState(null);
+    const [input, setInput] = useState("");
+    const [searchUrl, setSearchUrl] = useState("");
+    // var selected = document.forms[0].genre;
+    // var selected2 = document.forms[1].genre.selectedIndex;
+    // console.log(selected+";"+selected2);
 
     useEffect(()=>{
         getGame().then((result)=>{
             setGame(result);
         })
+
     },[])
 
+    function handleGenre(e){
+        console.log(e.target.value);
+        setGenre(e.target.value);
+        setInput(input+"Genre="+e.target.value+";");
+    }
+
+    function handleProducer(e){
+        setProducer(e.target.value);
+        console.log(e.target.value);
+        setInput(input+"Producer="+e.target.value+";");
+    }
+
+    function changeInput(e){
+        setInput(e.target.value);
+        console.log(input);
+    }
+
+    function searchFunction(){
+        let temp;
+        var varibles = input.split(";");
+        for (var i = 0; i< varibles.length; i++){
+            if (varibles[i].length>0 && varibles[i].split("=").length===1){
+                temp = varibles[i];
+                varibles[i]="Title="+temp;
+            }
+        }
+        temp = varibles.join("&");
+        // if (temp.endsWith('&')){
+        //     temp = temp.substring(0, searchUrl.length-2);
+        // }
+        console.log(temp);
+        window.location.replace(`/searchResult?${temp}`);
+    }
     return(
         <div className="backgroundForGamePage">
             <Logo />
@@ -59,8 +101,8 @@ export default function SearchResult(){
             <div>
                 <div className="searchGroup">
                     <div className="searchBarSmall">
-                        <input className="inputSmall" />
-                        <button className="searchButtonSmall">find your love</button>
+                        <input className="inputSmall" value={input} onChange={changeInput}/>
+                        <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
                         <FilterButton filterName="Trending"/>
@@ -68,16 +110,20 @@ export default function SearchResult(){
                         <FilterButton filterName="Highly Rated"/>
                         <FilterButton filterName="New"/>
                         <div className="filter_button">
-                            <select name="genre" id="genre">
+                            <select name="genre" id="genre" onChange={handleProducer}>
                                     <option value="Producer">Producer</option>
                                     <option value="saab">Saab</option>
                             </select>
                         </div>
                         <div className="filter_button">
-                            <select name="genre" id="genre">
-                                <option value="Genre">Genre</option>
-                                <option value="saab">Saab</option>
-                            </select>
+                            <form action="/">
+                                <select form="genre" name="genre" id="genre" onChange={handleGenre}>
+                                    <option value="Genre">Genre</option>
+                                    <option value="Action">Action</option>
+                                    <option value="Comedy">Comedy</option>
+                                </select>
+                                {/*<input type="submit" value="Submit" />*/}
+                            </form>
                         </div>
                     </div>
                 </div>

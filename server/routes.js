@@ -47,12 +47,14 @@ async function loginPage(req, res){
 }
 
 async function checkAuth(req, res, next){
+    console.log(req.session);
     if (req.session.login){
+        console.log("enter");
         next();
     }
     else {
         // if not login, redirect to login page.
-        res.redirect("/login")
+        res.send("please log in first!");
     }
 
 }
@@ -70,7 +72,7 @@ async function loginHandler(req, res) {
                 if (results.length > 0){
                     req.session.login = true;
                     req.session.userId = results[0].userId;
-                    res.redirect("/home")
+                    res.send("log in successfully!");
                 } else {
                     res.send("Invalid credential.");
                 }
@@ -92,8 +94,11 @@ async function registerPage(req, res){
 }
 
 async function registerHandler(req, res){
+    console.log("enter: "+JSON.stringify(req.body));
+
     const username = req.body.username
     const password = req.body.password
+    console.log("username: "+username);
     if (username && password){
         const checkExistQuery = `SELECT userId, password FROM RegisteredUser
                                  WHERE nickname='${username}'`
