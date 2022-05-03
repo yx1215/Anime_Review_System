@@ -40,6 +40,14 @@ app.get('/animations/separate', routes.all_animations_separate);
 
 app.get('/animation', routes.animation);
 
+app.get('/animations/genre_score', routes.animations_sort_genre_popularity)
+
+app.get('/animations/genre_aired', routes.animations_sort_genre_aired)
+
+app.get('/animations/producer_score', routes.animations_sort_producer_popularity)
+
+app.get('/animations/producer_aired', routes.animations_sort_producer_aired)
+
 app.get('/comments', routes.comments);
 
 app.get('/search/animations', routes.search_animations);
