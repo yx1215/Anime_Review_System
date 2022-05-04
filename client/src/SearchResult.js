@@ -13,6 +13,8 @@ let animeTitle;
 let animeGenre;
 let animeProducer;
 let animeSynopsis;
+let animeNew;
+let animePopularity;
 
 async function getGame(){
     let url = `${link}/search/animations?`;
@@ -36,6 +38,21 @@ async function getGame(){
     return info.data.results;
 }
 
+async function getGameBasedOnTime(){
+    let url = `${link}/animations/genre_aired`;
+    const info = await axios.get(url).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+async function getGameBasedOnPopularity(){
+    let url = `${link}/animations/genre_score`;
+    const info = await axios.get(url).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+
 export default function SearchResult(){
     let search = window.location.search;
     let params = new URLSearchParams(search);
@@ -43,6 +60,8 @@ export default function SearchResult(){
     animeGenre = params.get('Genre');
     animeProducer = params.get('Producer');
     animeSynopsis = params.get('Synopsis');
+    animeNew = params.get('New');
+    animePopularity = params.get('Popularity');
     const [game, setGame] = useState([]);
     const [genre, setGenre] = useState(null);
     const [producer, setProducer] = useState(null);
@@ -51,35 +70,34 @@ export default function SearchResult(){
     if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }
-    // const [filter, setFilter] = useState({
-    //     Title: null,
-    //     Genre: null,
-    //     Producer: null,
-    //     New: null,
-    //     Rated: null,
-    //     Viewed: null,
-    //     Trending: null
-    // });
-    // var selected = document.forms[0].genre;
-    // var selected2 = document.forms[1].genre.selectedIndex;
-    // console.log(selected+";"+selected2);
 
     useEffect(()=>{
-        getGame().then((result)=>{
-            setGame(result);
-            if(animeTitle){
-                setInput("Title="+animeTitle+";");
-                // filter.Title=animeTitle;
-            }
-            if(animeGenre){
-                // filter.Genre = animeGenre;
-                setInput(prevState => prevState+"Genre="+animeGenre+";");
-            }
-            if(animeProducer){
-                // filter.Producer = animeProducer;
-                setInput(prevState => prevState+"Producer="+animeProducer+";");
-            }
-        });
+        if (animeNew==='1'){
+            getGameBasedOnTime().then((result) => {
+                setGame(result);
+            })
+        }else if(animePopularity==="1"){
+            getGameBasedOnPopularity().then((result) => {
+                setGame(result);
+            })
+        }else{
+            getGame().then((result) => {
+                setGame(result);
+                if (animeTitle) {
+                    setInput("Title=" + animeTitle + ";");
+                    // filter.Title=animeTitle;
+                }
+                if (animeGenre) {
+                    // filter.Genre = animeGenre;
+                    setInput(prevState => prevState + "Genre=" + animeGenre + ";");
+                }
+                if (animeProducer) {
+                    // filter.Producer = animeProducer;
+                    setInput(prevState => prevState + "Producer=" + animeProducer + ";");
+                }
+
+            });
+        }
     },[])
 
     function handleGenre(e){
@@ -96,6 +114,16 @@ export default function SearchResult(){
         setInput(input+"Producer="+e.target.value+";");
     }
 
+    function findByTime(e){
+        console.log(e.target.value);
+        window.location.replace(`/searchResult?New=1`);
+    }
+
+    function findByPopularity(e){
+        console.log(e.target.value);
+        window.location.replace(`/searchResult?Popularity=1`);
+    }
+
     function changeInput(e){
         setInput(e.target.value);
         console.log(input);
@@ -103,6 +131,9 @@ export default function SearchResult(){
 
     function searchFunction(){
         let temp;
+        if(input==="New=1;"){
+            window.location.replace(`/searchResult?New=1`);
+        }
         var varibles = input.split(";");
         for (var i = 0; i< varibles.length; i++){
             if (varibles[i].length>0 && varibles[i].split("=").length===1){
@@ -138,8 +169,14 @@ export default function SearchResult(){
 
                         <FilterButton filterName="Trending"/>
                         <FilterButton filterName="Most Viewed"/>
-                        <FilterButton filterName="Highly Rated"/>
-                        <FilterButton filterName="New"/>
+                        <div className="filter_button" onClick={findByPopularity}>
+                            <div className="filter">Highly Rated</div>
+                        </div>
+                        {/*<FilterButton filterName="Highly Rated"/>*/}
+                        {/*<FilterButton filterName="New" onClick={() => { findByTime();}} />*/}
+                        <div className="filter_button" onClick={findByTime}>
+                            <div className="filter">New</div>
+                        </div>
                         {/*<FilterButton filterName="User"/>*/}
                         <div className="filter_button" onClick={findUser}>
                             <div className="filter">User</div>
