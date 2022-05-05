@@ -7,6 +7,7 @@ import anime from './image/anime.jpeg';
 import Rating from 'react-star-rating-lite';
 
 let animeId = null;
+let username;
 const link = 'http://localhost:8080';
 
 async function getGameInfo(id){
@@ -33,6 +34,8 @@ export default function GamePage(){
 
     if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
+    }else{
+        username= window.sessionStorage.getItem('username');
     }
 
     useEffect(()=>{
@@ -48,8 +51,8 @@ export default function GamePage(){
     return(
         <div className="backgroundForGamePage">
             <Logo />
-            <div className="avatar">
-                <img src={avatar} />
+            <div className="username">
+                {username}
             </div>
             <div className="gameInformation">
                 <div className="gameName">{info.title}</div>

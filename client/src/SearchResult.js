@@ -6,9 +6,11 @@ import anime from './image/anime.jpeg';
 import FilterButton from './FilterButton';
 import axios from "axios";
 import ResultUnit from "./resultUnit";
+import UserResultUnit from "./UserResultUnit";
 
 
 const link = 'http://localhost:8080';
+let username;
 let animeTitle;
 let animeGenre;
 let animeProducer;
@@ -16,6 +18,7 @@ let animeSynopsis;
 let animeNew;
 let animeScore;
 let animePopularity;
+let user;
 
 async function getGame(){
     let url = `${link}/search/animations?`;
@@ -37,6 +40,28 @@ async function getGame(){
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
+}
+
+async function getUsers(){
+    let result=[];
+    if(parseInt(user)==="NaN"){
+        let url = `${link}/search/single_user?userId=${user}`;
+        const info = await axios.get(url).catch((err) => { console.log(err); });
+        if(info.data.error||info.data.results.length===0){
+            console.log(info);
+        }else{
+            result=info.data.results;
+        }
+    }
+    let url2 = `${link}/search/users?nickname=${user}`;
+    const info2 = await axios.get(url2).catch((err) => { console.log(err); });
+    if(info2.data.error||info2.data.results.length===0){
+        console.log(info2);
+    }else{
+        result=result.concat(info2.data.results);
+    }
+    // result+=info2.data.results;
+    return result;
 }
 
 async function getGameBasedOnTime(){
@@ -71,7 +96,9 @@ export default function SearchResult(){
     animeNew = params.get('New');
     animeScore = params.get('Score');
     animePopularity = params.get('Popularity');
+    user = params.get('User');
     const [game, setGame] = useState([]);
+    const [users, setUsers] = useState([]);
     const [genre, setGenre] = useState(null);
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
@@ -81,7 +108,13 @@ export default function SearchResult(){
     }
 
     useEffect(()=>{
-        if (animeNew==='1'){
+        username=window.sessionStorage.getItem("username");
+        if(user!=null){
+            getUsers().then((result) =>{
+                setUsers(result);
+                setInput("User="+user+";");
+            })
+        } else if (animeNew==='1'){
             getGameBasedOnTime().then((result) => {
                 setGame(result);
                 setInput("New=1;");
@@ -180,10 +213,8 @@ export default function SearchResult(){
 
     return(
         <div className="backgroundForGamePage">
-            <Logo />
-            <div className="avatar">
-                <img src={avatar} />
-            </div>
+                <Logo />
+
             <div>
                 <div className="searchGroup">
                     <div className="searchBarSmall">
@@ -226,7 +257,13 @@ export default function SearchResult(){
                     {(game != null && game.map((one) => (
                         <ResultUnit gameObj={one}/>
                         )))}
+                    {(users != null && users.map((one) => (
+                        <UserResultUnit userObj={one}/>
+                    )))}
                 </div>
+            </div>
+            <div className="username">
+                {username}
             </div>
         </div>
 

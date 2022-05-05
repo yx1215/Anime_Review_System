@@ -675,7 +675,7 @@ async function search_users(req, res){
                 WHERE l.animeRank <= 5
             ),
             UserLike AS (
-                SELECT RU.nickname, RU.age, RU.gender,
+                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
                        GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
                        GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
                 FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
@@ -695,7 +695,7 @@ async function search_users(req, res){
                 WHERE l.animeRank <= 5
             ),
             UserLike AS (
-                SELECT RU.nickname, RU.age, RU.gender,
+                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
                        GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
                        GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
                 FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
