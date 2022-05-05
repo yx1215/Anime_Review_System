@@ -65,11 +65,20 @@ export default function Login() {
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text">Forget password</div>
+                    <div className="text" >
+                        <p>
+                            <span className="nowrap">Forget Password</span>
+                        </p>
+                        {/* Forget-&nbsp;password</div> */}
+                    </div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
-                    <div className="text"><a href="/register">Register</a></div>
+                    <div className="text">
+                        <p>
+                            <span className="nowrap"><a href="/register">Register</a></span>
+                        </p>
+                    </div>
                     <div className="line"></div>
                 </div>
             </div>

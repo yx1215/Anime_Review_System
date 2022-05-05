@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/Register.css'
 import Logo from './Logo';
 import axios from "axios";
@@ -14,8 +14,7 @@ export default function Register() {
     // password = params.get('password');
     const [acct, setAcct] = useState({
         username: "",
-        password: ""
-    });
+        password: ""});
 
     async function sendRegister(acct) {
         // eslint-disable-next-line no-return-await
@@ -28,7 +27,7 @@ export default function Register() {
         console.log(`${link}/register`);
         return sendRegister(acct).then((value) => {
             alert(value.data);
-            if (value.data === "Register complete.") {
+            if(value.data==="Register complete."){
                 window.location.replace("/login");
             }
         }).catch((err) => { console.log(err); });

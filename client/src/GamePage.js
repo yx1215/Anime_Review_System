@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/GamePage.css';
 import axios from 'axios';
 import Logo from './Logo';
@@ -9,33 +9,33 @@ import Rating from 'react-star-rating-lite';
 let animeId = null;
 const link = 'http://localhost:8080';
 
-async function getGameInfo(id) {
+async function getGameInfo(id){
     const info = await axios.get(`${link}/animation?id=${id}`).catch((err) => { console.log(err); });
     return info.data.results[0];
 }
 
-async function getGameComments(id) {
+async function getGameComments(id){
     const info = await axios.get(`${link}/comments?id=${id}`).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
-function getUserInfo(id) {
+function getUserInfo(id){
     window.location.replace(`/profile?userId=${id}`);
 }
 
-export default function GamePage() {
+export default function GamePage(){
     let search = window.location.search;
     let params = new URLSearchParams(search);
     animeId = params.get('id');
     const [info, setInfo] = useState({});
     const [comments, setComments] = useState([]);
 
-    if (!window.sessionStorage.getItem('username')) {
+    if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }
 
-    useEffect(() => {
+    useEffect(()=>{
         getGameInfo(animeId).then((result) => {
             setInfo(result);
         });
@@ -45,7 +45,7 @@ export default function GamePage() {
     }, [])
     console.log(comments);
 
-    return (
+    return(
         <div className="backgroundForGamePage">
             <Logo />
             <div className="avatar">
@@ -55,7 +55,7 @@ export default function GamePage() {
                 <div className="gameName">{info.title}</div>
                 <div className="gameDetails">
                     <div className="gameImage">
-                        <img src={info.img_url} />
+                        <img src={info.img_url}/>
                     </div>
                     <div className="gameText">
                         <p>id:       {info.animeId}</p>
@@ -76,8 +76,8 @@ export default function GamePage() {
                         <div className="gameCommentUnit" onClick={() => { getUserInfo(one.userId); }}>
                             <div className="userCol">
                                 {/*<img src={avatar}/>*/}
-                                <div style={{ fontWeight: "bold", fontSize: "25px" }}>{one.nickname}</div>
-                                <Rating value={one.rating / 2} weight="20px" readonly />
+                                <div style={{fontWeight: "bold", fontSize: "25px"}}>{one.nickname}</div>
+                                <Rating value={one.rating/2} weight="20px" readonly/>
                             </div>
                             <div className="commentText">
                                 {one.comments}

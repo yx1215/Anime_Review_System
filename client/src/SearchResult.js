@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './view/SearchResult.css';
 import Logo from './Logo';
 import avatar from './image/woman.jpeg';
@@ -16,36 +16,36 @@ let animeSynopsis;
 let animeNew;
 let animePopularity;
 
-async function getGame() {
+async function getGame(){
     let url = `${link}/search/animations?`;
     let pool = [];
-    if (animeTitle) {
+    if (animeTitle){
         pool.push(`Title=${animeTitle}`);
     }
-    if (animeGenre) {
+    if(animeGenre){
         pool.push(`Genre=${animeGenre}`);
     }
-    if (animeProducer) {
+    if (animeProducer){
         pool.push(`Producer=${animeProducer}`);
     }
-    if (animeSynopsis) {
+    if (animeSynopsis){
         pool.push(`Synopsis=${animeSynopsis}`);
     }
     let stringy = pool.join("&");
-    url += stringy;
+    url +=stringy;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
-async function getGameBasedOnTime() {
+async function getGameBasedOnTime(){
     let url = `${link}/animations/genre_aired`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
-async function getGameBasedOnPopularity() {
+async function getGameBasedOnPopularity(){
     let url = `${link}/animations/genre_score`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
@@ -53,7 +53,7 @@ async function getGameBasedOnPopularity() {
 }
 
 
-export default function SearchResult() {
+export default function SearchResult(){
     let search = window.location.search;
     let params = new URLSearchParams(search);
     animeTitle = params.get('Title');
@@ -67,20 +67,20 @@ export default function SearchResult() {
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
     const [searchUrl, setSearchUrl] = useState("");
-    if (!window.sessionStorage.getItem('username')) {
+    if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }
 
-    useEffect(() => {
-        if (animeNew === '1') {
+    useEffect(()=>{
+        if (animeNew==='1'){
             getGameBasedOnTime().then((result) => {
                 setGame(result);
             })
-        } else if (animePopularity === "1") {
+        }else if(animePopularity==="1"){
             getGameBasedOnPopularity().then((result) => {
                 setGame(result);
             })
-        } else {
+        }else{
             getGame().then((result) => {
                 setGame(result);
                 if (animeTitle) {
@@ -98,47 +98,47 @@ export default function SearchResult() {
 
             });
         }
-    }, [])
+    },[])
 
-    function handleGenre(e) {
+    function handleGenre(e){
         console.log(e.target.value);
         setGenre(e.target.value);
         // filter.Genre = e.target.value;
-        setInput(input + "Genre=" + e.target.value + ";");
+        setInput(input+"Genre="+e.target.value+";");
     }
 
-    function handleProducer(e) {
+    function handleProducer(e){
         setProducer(e.target.value);
         console.log(e.target.value);
         // filter.Producer = e.target.value;
-        setInput(input + "Producer=" + e.target.value + ";");
+        setInput(input+"Producer="+e.target.value+";");
     }
 
-    function findByTime(e) {
+    function findByTime(e){
         console.log(e.target.value);
         window.location.replace(`/searchResult?New=1`);
     }
 
-    function findByPopularity(e) {
+    function findByPopularity(e){
         console.log(e.target.value);
         window.location.replace(`/searchResult?Popularity=1`);
     }
 
-    function changeInput(e) {
+    function changeInput(e){
         setInput(e.target.value);
         console.log(input);
     }
 
-    function searchFunction() {
+    function searchFunction(){
         let temp;
-        if (input === "New=1;") {
+        if(input==="New=1;"){
             window.location.replace(`/searchResult?New=1`);
         }
         var varibles = input.split(";");
-        for (var i = 0; i < varibles.length; i++) {
-            if (varibles[i].length > 0 && varibles[i].split("=").length === 1) {
+        for (var i = 0; i< varibles.length; i++){
+            if (varibles[i].length>0 && varibles[i].split("=").length===1){
                 temp = varibles[i];
-                varibles[i] = "Title=" + temp;
+                varibles[i]="Title="+temp;
             }
         }
         temp = varibles.join("&");
@@ -149,11 +149,11 @@ export default function SearchResult() {
         window.location.replace(`/searchResult?${temp}`);
     }
 
-    function findUser() {
+    function findUser(){
         setInput("User=");
     }
 
-    return (
+    return(
         <div className="backgroundForGamePage">
             <Logo />
             <div className="avatar">
@@ -162,13 +162,13 @@ export default function SearchResult() {
             <div>
                 <div className="searchGroup">
                     <div className="searchBarSmall">
-                        <input className="inputSmall" value={input} onChange={changeInput} />
+                        <input className="inputSmall" value={input} onChange={changeInput}/>
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
 
-                        <FilterButton filterName="Trending" />
-                        <FilterButton filterName="Most Viewed" />
+                        <FilterButton filterName="Trending"/>
+                        <FilterButton filterName="Most Viewed"/>
                         <div className="filter_button" onClick={findByPopularity}>
                             <div className="filter">Highly Rated</div>
                         </div>
@@ -183,8 +183,8 @@ export default function SearchResult() {
                         </div>
                         <div className="filter_button">
                             <select name="genre" id="genre" onChange={handleProducer}>
-                                <option value="Producer">Producer</option>
-                                <option value="saab">Saab</option>
+                                    <option value="Producer">Producer</option>
+                                    <option value="saab">Saab</option>
                             </select>
                         </div>
                         <div className="filter_button">
@@ -201,8 +201,8 @@ export default function SearchResult() {
                 </div>
                 <div className="searchResult">
                     {(game != null && game.map((one) => (
-                        <ResultUnit gameObj={one} />
-                    )))}
+                        <ResultUnit gameObj={one}/>
+                        )))}
                 </div>
             </div>
         </div>
