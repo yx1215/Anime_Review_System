@@ -254,36 +254,18 @@ async function animation(req, res) {
                               JOIN Producer D ON P.producerId = D.producerId 
                  GROUP BY A.animeID) AS AP,
                  Anime A2 
-<<<<<<< HEAD
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid}
             `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            }
-            else {
-                if (results) {
-                    res.json({ results: results })
-=======
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid} AND A2.title != 'Unknown' 
-            `, function (error, results, field){
-                if (error){
+                if (error) {
                     console.log(error)
-                    res.json({ error: error })
->>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
+                    res.json({error: error})
+                } else {
+                    if (results) {
+                        res.json({results: results})
+                    }
                 }
-                else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
+            })
     }
-
-    else {
-        res.json({ error: "id needed." })
-    }
-
 }
 
 async function comments(req, res) {
@@ -607,7 +589,6 @@ async function animations_sort_most_viewed(req, res) {
     }
 }
 
-<<<<<<< HEAD
 async function animations_sort_producer_aired(req, res) {
     const producer = req.query.Producer ? req.query.Producer : ''
     const page = req.query.page
@@ -680,10 +661,6 @@ async function animations_sort_producer_aired(req, res) {
         )
     }
 }
-
-
-=======
->>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
 
 // ********************************************
 //               GENERAL ROUTES
@@ -881,16 +858,9 @@ module.exports = {
     all_user,
     search_users,
     find_single_user,
-<<<<<<< HEAD
-    animations_sort_genre_popularity,
-    animations_sort_genre_aired,
-    animations_sort_producer_popularity,
-    animations_sort_producer_aired
-}
-=======
+    animations_sort_producer_aired,
     animations_sort_rating,
     animations_sort_aired,
     animations_sort_most_viewed,
     friend_recommendation
 }
->>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
