@@ -1,0 +1,142 @@
+@font-face {
+    font-family: 'Bruno Ace SC Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Bruno Ace SC Regular'), url('BrunoAceSC-Regular.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
+}
+
+.body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    display: flex;
+    /*justify-content: center;*/
+
+    font-family: 'Cormorant Regular';
+    font-size: 64px;
+    font-weight: 400;
+    font-style: normal;
+
+    align-items: center;
+    position: absolute;
+    /*width: 530px;*/
+    top: 120px;
+}
+
+.User {
+    font-family: 'Cormorant Regular';
+    font-weight: bold;
+    text-align: left;
+    float: left;
+}
+
+/* .input {
+    width: 667px;
+    height: 70px;
+    background: #EEF2F1;
+    border-width: 0;
+    font-size: 36px;
+} */
+
+input[type=text],
+input[type=password] {
+    width: 110%;
+    padding: 12px 20px;
+    margin: 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+.Register {
+    text-align: center;
+    background-color: #fff;
+    border-radius: 20px;
+    width: 300px;
+    height: 350px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 20px;
+}
+
+.registerButton {
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+
+    width: 111px;
+    height: 40px;
+    background: #C0D8CC;
+    border-width: 0;
+}
+
+
+.otherInfo {
+    display: flex;
+    /*align-items: center;*/
+    position: absolute;
+    bottom: 0;
+}
+
+.optionUnit {
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    align-content: center;
+    align-items: center;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.text {
+    display: flex;
+    margin-bottom: 20px;
+
+    width: 146px;
+    height: 23px;
+
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 25px;
+    justify-content: center;
+}
+
+.line {
+    display: flex;
+    width: 0px;
+    height: 182px;
+    bottom: 0px;
+    border: 1px solid #000000;
+    align-items: center;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b262488638d4fed41fdad2be1ab57f2f62eeae77
+}
+
+#longSentence{
+    font-size: 25px;
+}
+<<<<<<< HEAD
+=======
+}
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
+=======
+>>>>>>> b262488638d4fed41fdad2be1ab57f2f62eeae77
