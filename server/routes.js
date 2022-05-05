@@ -254,29 +254,16 @@ async function animation(req, res) {
                               JOIN Producer D ON P.producerId = D.producerId 
                  GROUP BY A.animeID) AS AP,
                  Anime A2 
-<<<<<<< HEAD
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid}
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            }
-            else {
-                if (results) {
-                    res.json({ results: results })
-=======
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid} AND A2.title != 'Unknown' 
             `, function (error, results, field){
                 if (error){
                     console.log(error)
                     res.json({ error: error })
->>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
                 }
                 else {
                     res.json({ results: [] })
                 }
             }
-        }
         )
     }
 
@@ -607,83 +594,6 @@ async function animations_sort_most_viewed(req, res) {
     }
 }
 
-<<<<<<< HEAD
-async function animations_sort_producer_aired(req, res) {
-    const producer = req.query.Producer ? req.query.Producer : ''
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize : 10
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, 
-                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
-                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
-                  AP.producers LIKE '%${producer}%'
-            ORDER BY aired DESC, A2.title
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
-    else {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, 
-                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
-                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
-                  AP.producers LIKE '%${producer}%'
-            ORDER BY aired DESC, A2.title
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
-}
-
-
-=======
->>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
 
 // ********************************************
 //               GENERAL ROUTES
@@ -849,15 +759,7 @@ module.exports = {
     all_user,
     search_users,
     find_single_user,
-<<<<<<< HEAD
-    animations_sort_genre_popularity,
-    animations_sort_genre_aired,
-    animations_sort_producer_popularity,
-    animations_sort_producer_aired
-}
-=======
     animations_sort_rating,
     animations_sort_aired,
     animations_sort_most_viewed
 }
->>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
