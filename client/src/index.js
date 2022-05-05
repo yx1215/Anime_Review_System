@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+<<<<<<< HEAD
 import { BrowserRouter as Router } from 'react-router-dom';
+=======
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

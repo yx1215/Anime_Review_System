@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import './view/Search.css'
 import { Route, useHistory } from "react-router-dom";
@@ -49,11 +50,18 @@ export default function Search() {
     }
 
     return (
+=======
+import React from 'react';
+import './view/Search.css'
+export default function Search(){
+    return(
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
         <div className="body">
             <div className="title">
                 AniME
             </div>
             <div className="searchBar">
+<<<<<<< HEAD
                 <input className="input" type='text' onChange={searchHandler} />
                 {/* <Route path="/searchResult" component={SearchResult} /> */}
                 <button className="searchButton" type="submit" onClick={searchFunction}>
@@ -70,6 +78,18 @@ export default function Search() {
                     {/* <Route path="/register" component={Register} /> */}
                     {/* <div className="text" type="button" onClick={handleRegister}>register</div> */}
                     <div className="text" ><a href="/register">register</a></div>
+=======
+                <input className="input"/>
+                <button className="searchButton">find your love</button>
+            </div>
+            <div className="otherInfo">
+                <div className="optionUnit">
+                    <div className="text">login</div>
+                    <div className="line"></div>
+                </div>
+                <div className="optionUnit">
+                    <div className="text">register</div>
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                     <div className="line"></div>
                 </div>
             </div>

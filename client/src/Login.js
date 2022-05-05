@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import './view/Login.css'
 import Logo from './Logo';
@@ -42,6 +43,12 @@ export default function Login() {
         return e;
     }
 
+=======
+import React from 'react';
+import './view/Login.css'
+import Logo from './Logo';
+export default function Login() {
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
     return (
         <div className="body">
             <Logo />
@@ -49,6 +56,7 @@ export default function Login() {
                 Log in
             </div>
             <div className="Login">
+<<<<<<< HEAD
                 <form onSubmit={handleNameSubmit}>
                     <label className="User" for="uname"><b>Username</b></label>
                     <input type="text" name="uname" required onChange={(e) => { handleUNameChange(e.target.value); }} />
@@ -58,15 +66,34 @@ export default function Login() {
 
                     <button type="submit" className="loginButton">Log in</button>
                 </form>
+=======
+
+                <label className="User" for="uname"><b>Username</b></label>
+                <input type="text" name="uname" required />
+
+                <label className="User" for="psw"><b>Password</b></label>
+                <input type="password" name="psw" required />
+
+                <button className="loginButton">Log in</button>
+
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
             </div>
 
             <div className="otherInfo">
                 <div className="optionUnit">
+<<<<<<< HEAD
                     <div className="text">Forget password</div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
                     <div className="text"><a href="/register">Register</a></div>
+=======
+                    <div className="text">login</div>
+                    <div className="line"></div>
+                </div>
+                <div className="optionUnit">
+                    <div className="text">register</div>
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                     <div className="line"></div>
                 </div>
             </div>

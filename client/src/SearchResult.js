@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 import React, {useEffect, useState} from 'react';
+=======
+import React from 'react';
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
 import './view/SearchResult.css';
 import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
 import FilterButton from './FilterButton';
+<<<<<<< HEAD
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 
@@ -92,6 +97,9 @@ export default function SearchResult(){
         console.log(temp);
         window.location.replace(`/searchResult?${temp}`);
     }
+=======
+export default function SearchResult(){
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
     return(
         <div className="backgroundForGamePage">
             <Logo />
@@ -99,10 +107,18 @@ export default function SearchResult(){
                 <img src={avatar} />
             </div>
             <div>
+<<<<<<< HEAD
                 <div className="searchGroup">
                     <div className="searchBarSmall">
                         <input className="inputSmall" value={input} onChange={changeInput}/>
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
+=======
+
+                <div className="searchGroup">
+                    <div className="searchBarSmall">
+                        <input className="inputSmall"/>
+                        <button className="searchButtonSmall">find your love</button>
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                     </div>
                     <div className="searchFilter">
                         <FilterButton filterName="Trending"/>
@@ -110,12 +126,17 @@ export default function SearchResult(){
                         <FilterButton filterName="Highly Rated"/>
                         <FilterButton filterName="New"/>
                         <div className="filter_button">
+<<<<<<< HEAD
                             <select name="genre" id="genre" onChange={handleProducer}>
+=======
+                            <select name="genre" id="genre">
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                                     <option value="Producer">Producer</option>
                                     <option value="saab">Saab</option>
                             </select>
                         </div>
                         <div className="filter_button">
+<<<<<<< HEAD
                             <form action="/">
                                 <select form="genre" name="genre" id="genre" onChange={handleGenre}>
                                     <option value="Genre">Genre</option>
@@ -124,13 +145,82 @@ export default function SearchResult(){
                                 </select>
                                 {/*<input type="submit" value="Submit" />*/}
                             </form>
+=======
+                            <select name="genre" id="genre">
+                                <option value="Genre">Genre</option>
+                                <option value="saab">Saab</option>
+                            </select>
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                         </div>
                     </div>
                 </div>
                 <div className="searchResult">
+<<<<<<< HEAD
                     {(game != null && game.map((one) => (
                         <ResultUnit gameObj={one}/>
                         )))}
+=======
+                    <div className="resultUnit">
+                        <div className="resultImg">
+                            <img src={anime} />
+                        </div>
+                        <div className="resultInfo">
+                            <h4>Lorem ipsum dolor sit ame</h4>
+                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                            est laborum...
+                        </div>
+                    </div>
+                    <div className="resultUnit">
+                        <div className="resultImg">
+                            <img src={anime} />
+                        </div>
+                        <div className="resultInfo">
+                            <h4>Lorem ipsum dolor sit ame</h4>
+                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                            est laborum...
+                        </div>
+                    </div>
+                    <div className="resultUnit">
+                        <div className="resultImg">
+                            <img src={anime} />
+                        </div>
+                        <div className="resultInfo">
+                            <h4>Lorem ipsum dolor sit ame</h4>
+                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                            est laborum...
+                        </div>
+                    </div>
+                    <div className="resultUnit">
+                        <div className="resultImg">
+                            <img src={anime} />
+                        </div>
+                        <div className="resultInfo">
+                            <h4>Lorem ipsum dolor sit ame</h4>
+                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                            est laborum...
+                        </div>
+                    </div>
+                    <div className="resultUnit">
+                        <div className="resultImg">
+                            <img src={anime} />
+                        </div>
+                        <div className="resultInfo">
+                            <h4>Lorem ipsum dolor sit ame</h4>
+                            <p>Year: 2016</p>       <p>Producer: minim veniam</p>
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                            est laborum...
+                        </div>
+                    </div>
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                 </div>
             </div>
         </div>

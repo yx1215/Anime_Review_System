@@ -92,8 +92,11 @@
     flex-direction: row;
     align-items: center;
     margin-top: 30px;
+<<<<<<< HEAD
     background-color: #C0D8CC;
     padding: 30px;
+=======
+>>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
 }
 
 .gameCommentUnit img{
