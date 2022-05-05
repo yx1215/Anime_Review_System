@@ -48,7 +48,7 @@ export default function Register() {
     return (
         <div className="body">
             <Logo />
-            <div className="title">
+            <div className="registerTitle">
                 Register
             </div>
             <div className="Register">

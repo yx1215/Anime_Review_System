@@ -5,10 +5,17 @@ import SearchResult from './SearchResult';
 import Login from './Login';
 import Register from './Register';
 
+let username;
 export default function Search() {
-
     const [input, setInput] = useState("");
-
+    // async function helper(){
+    //     return await axios.get(`${link}/`).catch((err) => { console.log(err); });
+    // }
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
+    username = window.sessionStorage.getItem('username');
+    console.log(username);
     // const history = useHistory();
 
     // const handleSubmit = (e) => {
@@ -50,6 +57,10 @@ export default function Search() {
 
     return (
         <div className="body">
+            <div className="username">
+                {username}
+            </div>
+
             <div className="title">
                 AniME
             </div>
@@ -78,4 +89,3 @@ export default function Search() {
     )
 }
 export { Search };
-
