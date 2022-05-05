@@ -5,6 +5,7 @@ import axios from 'axios';
 import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
+import Rating from 'react-star-rating-lite';
 
 let animeId = null;
 const link = 'http://localhost:8080';
@@ -20,12 +21,20 @@ async function getGameComments(id){
     return info.data.results;
 }
 
+function getUserInfo(id){
+    window.location.replace(`/profile?userId=${id}`);
+}
+
 export default function GamePage(){
     let search = window.location.search;
     let params = new URLSearchParams(search);
     animeId = params.get('id');
     const [info, setInfo] = useState({});
     const [comments, setComments] = useState([]);
+
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
 
     useEffect(()=>{
         getGameInfo(animeId).then((result) => {
@@ -98,6 +107,7 @@ export default function GamePage(){
                     <div className="comments">Comments</div>
 <<<<<<< HEAD
                     {(comments != null && comments.map((one) => (
+<<<<<<< HEAD
                         <div className="gameCommentUnit">
                             <div>
                                 <img src={avatar}/>
@@ -106,6 +116,18 @@ export default function GamePage(){
                         <div className="commentText">
                             {one.comments}
                         </div>
+=======
+                        <div className="gameCommentUnit" onClick={() => { getUserInfo(one.userId); }}>
+                            <div className="userCol">
+                                {/*<img src={avatar}/>*/}
+                                <div style={{fontWeight: "bold", fontSize: "25px"}}>{one.nickname}</div>
+                                <Rating value={one.rating/2} weight="20px" readonly/>
+                            </div>
+                            <div className="commentText">
+                                {one.comments}
+
+                            </div>
+>>>>>>> b262488638d4fed41fdad2be1ab57f2f62eeae77
                         </div>
                     )))}
 =======
@@ -138,8 +160,6 @@ export default function GamePage(){
 >>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
                 </div>
             </div>
-
-
         </div>
 
     )

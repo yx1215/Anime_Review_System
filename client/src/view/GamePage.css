@@ -105,6 +105,11 @@
     border-radius: 50px;
 }
 
+.userCol{
+    width: 20%;
+    overflow-wrap: break-word;
+}
 .commentText{
-    margin-left: 40px;
+    width: 80%;
+
 }

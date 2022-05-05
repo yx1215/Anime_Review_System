@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import './view/Search.css'
 import { Route, useHistory } from "react-router-dom";
@@ -52,8 +53,25 @@ export default function Search() {
     return (
 =======
 import React from 'react';
+=======
+import React, {useEffect} from 'react';
+>>>>>>> b262488638d4fed41fdad2be1ab57f2f62eeae77
 import './view/Search.css'
+import axios from "axios";
+import {ReactSession} from "react-client-session";
+
+const link = 'http://localhost:8080';
+
+// async function helper(){
+//     return await axios.get(`${link}/`).catch((err) => { console.log(err); });
+// }
 export default function Search(){
+    useEffect(()=>{
+
+    },[])
+    if(!window.sessionStorage.getItem('username')){
+        window.location.replace("/login");
+    }
     return(
 >>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
         <div className="body">
