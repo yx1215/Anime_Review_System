@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql      = require('mysql');
 var cors = require('cors')
 
 
@@ -10,7 +10,7 @@ const session = require("express-session");
 const app = express();
 
 app.use(express.urlencoded({
-	extended: true
+  extended: true
 }))
 
 app.use(session({
@@ -40,15 +40,15 @@ app.get('/animations/separate', routes.all_animations_separate);
 
 app.get('/animation', routes.animation);
 
-app.get('/animations/sort_score', routes.animations_sort_rating)
+app.get('/animations/genre_score', routes.animations_sort_genre_popularity)
 
-app.get('/animations/sort_aired', routes.animations_sort_aired)
+app.get('/animations/genre_aired', routes.animations_sort_genre_aired)
 
-app.get('/animations/sort_most_viewed', routes.animations_sort_most_viewed)
+<<<<<<< HEAD
+=======
+app.get('/animations/producer_score', routes.animations_sort_producer_popularity)
 
-//app.get('/animations/producer_score', routes.animations_sort_producer_popularity)
-
-//app.get('/animations/producer_aired', routes.animations_sort_producer_aired)
+app.get('/animations/producer_aired', routes.animations_sort_producer_aired)
 
 app.get('/comments', routes.comments);
 
@@ -60,6 +60,7 @@ app.get('/search/users', routes.search_users);
 
 app.get('/search/single_user', routes.find_single_user)
 
+>>>>>>> b262488638d4fed41fdad2be1ab57f2f62eeae77
 // homework routes
 // Route 1 - register as GET 
 // app.get('/hello', routes.hello)
@@ -91,7 +92,7 @@ app.get("/logout", routes.logout);
 
 
 app.listen(config.server_port, () => {
-	console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
+    console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });
 
 module.exports = app;

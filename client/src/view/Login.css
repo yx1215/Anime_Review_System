@@ -24,7 +24,7 @@
 
     font-family: 'Cormorant Regular';
     font-size: 64px;
-    font-weight: 400;
+    font-weight: 450;
     font-style: normal;
 
     align-items: center;
@@ -50,7 +50,7 @@
 
 input[type=text],
 input[type=password] {
-    width: 110%;
+    width: 120%;
     padding: 12px 20px;
     margin: 20px 0;
     display: inline-block;
@@ -106,8 +106,7 @@ input[type=password] {
 
 .text {
     display: flex;
-    margin-bottom: 20px;
-
+    margin-bottom: 0px;
     width: 146px;
     height: 73px;
 
@@ -119,10 +118,13 @@ input[type=password] {
 }
 
 .line {
-    display: flex;
     width: 0px;
-    height: 182px;
+    height: 162px;
     bottom: 0px;
     border: 1px solid #000000;
     align-items: center;
+}
+
+.nowrap {
+    white-space: nowrap;
 }
