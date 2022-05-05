@@ -1,5 +1,5 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql      = require('mysql');
 var cors = require('cors')
 
 
@@ -10,7 +10,7 @@ const session = require("express-session");
 const app = express();
 
 app.use(express.urlencoded({
-	extended: true
+  extended: true
 }))
 
 app.use(session({
@@ -91,7 +91,7 @@ app.get("/logout", routes.logout);
 
 
 app.listen(config.server_port, () => {
-	console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
+    console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });
 
 module.exports = app;
