@@ -121,12 +121,12 @@ input[type=password] {
 .line {
     display: flex;
     width: 0px;
-    height: 182px;
+    height: 162px;
     bottom: 0px;
     border: 1px solid #000000;
     align-items: center;
 }
 
-#longSentence{
+#longSentence {
     font-size: 25px;
 }

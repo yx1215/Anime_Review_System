@@ -1,15 +1,16 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import './view/Login.css'
 import Logo from './Logo';
 import axios from "axios";
-import { ReactSession }  from 'react-client-session';
+import { ReactSession } from 'react-client-session';
 
 const link = 'http://localhost:8080';
 export default function Login() {
 
     const [acct, setAcct] = useState({
         username: "",
-        password: ""});
+        password: ""
+    });
 
     async function sendRegister(acct) {
         // eslint-disable-next-line no-return-await
@@ -23,7 +24,7 @@ export default function Login() {
         return sendRegister(acct).then((value) => {
             alert(value.data);
             console.log(value);
-            if(value.data==="log in successfully!"){
+            if (value.data === "log in successfully!") {
                 window.sessionStorage.setItem("username", acct.username);
                 window.location.replace(`/`);
             }
@@ -56,7 +57,7 @@ export default function Login() {
                     <input type="text" name="uname" required onChange={(e) => { handleUNameChange(e.target.value); }} />
 
                     <label className="User" for="psw"><b>Password</b></label>
-                    <input type="password" name="psw" required onChange={(e) => { handlePSWChange(e.target.value); }}/>
+                    <input type="password" name="psw" required onChange={(e) => { handlePSWChange(e.target.value); }} />
 
                     <button type="submit" className="loginButton">Log in</button>
                 </form>
@@ -64,11 +65,20 @@ export default function Login() {
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text">Forget password</div>
+                    <div className="text" >
+                        <p>
+                            <span className="nowrap">Forget Password</span>
+                        </p>
+                        {/* Forget-&nbsp;password</div> */}
+                    </div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
-                    <div className="text"><a href="/register">Register</a></div>
+                    <div className="text">
+                        <p>
+                            <span className="nowrap"><a href="/register">Register</a></span>
+                        </p>
+                    </div>
                     <div className="line"></div>
                 </div>
             </div>
