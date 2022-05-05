@@ -14,6 +14,7 @@ let animeGenre;
 let animeProducer;
 let animeSynopsis;
 let animeNew;
+let animeScore;
 let animePopularity;
 
 async function getGame(){
@@ -39,14 +40,21 @@ async function getGame(){
 }
 
 async function getGameBasedOnTime(){
-    let url = `${link}/animations/genre_aired`;
+    let url = `${link}/animations/sort_aired`;
+    const info = await axios.get(url).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+async function getGameBasedOnScore(){
+    let url = `${link}/animations/sort_score`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
 async function getGameBasedOnPopularity(){
-    let url = `${link}/animations/genre_score`;
+    let url = `${link}/animations/sort_most_viewed`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
@@ -61,6 +69,7 @@ export default function SearchResult(){
     animeProducer = params.get('Producer');
     animeSynopsis = params.get('Synopsis');
     animeNew = params.get('New');
+    animeScore = params.get('Score');
     animePopularity = params.get('Popularity');
     const [game, setGame] = useState([]);
     const [genre, setGenre] = useState(null);
@@ -75,12 +84,19 @@ export default function SearchResult(){
         if (animeNew==='1'){
             getGameBasedOnTime().then((result) => {
                 setGame(result);
+                setInput("New=1;");
+            })
+        }else if(animeScore==="1"){
+            getGameBasedOnScore().then((result) => {
+                setGame(result);
+                setInput("Score;");
             })
         }else if(animePopularity==="1"){
-            getGameBasedOnPopularity().then((result) => {
+            getGameBasedOnPopularity().then((result) =>{
                 setGame(result);
+                setInput("Popularity=1;");
             })
-        }else{
+        } else{
             getGame().then((result) => {
                 setGame(result);
                 if (animeTitle) {
@@ -119,6 +135,11 @@ export default function SearchResult(){
         window.location.replace(`/searchResult?New=1`);
     }
 
+    function findByScore(e){
+        console.log(e.target.value);
+        window.location.replace(`/searchResult?Score=1`);
+    }
+
     function findByPopularity(e){
         console.log(e.target.value);
         window.location.replace(`/searchResult?Popularity=1`);
@@ -133,6 +154,10 @@ export default function SearchResult(){
         let temp;
         if(input==="New=1;"){
             window.location.replace(`/searchResult?New=1`);
+        }else if(input==="Score=1;"){
+            window.location.replace(`/searchResult?Score=1`);
+        }else if(input==="Popularity=1;"){
+            window.location.replace(`/searchResult?Popularity=1`);
         }
         var varibles = input.split(";");
         for (var i = 0; i< varibles.length; i++){
@@ -166,14 +191,12 @@ export default function SearchResult(){
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
-
-                        <FilterButton filterName="Trending"/>
-                        <FilterButton filterName="Most Viewed"/>
                         <div className="filter_button" onClick={findByPopularity}>
+                            <div className="filter">Most Viewed</div>
+                        </div>
+                        <div className="filter_button" onClick={findByScore}>
                             <div className="filter">Highly Rated</div>
                         </div>
-                        {/*<FilterButton filterName="Highly Rated"/>*/}
-                        {/*<FilterButton filterName="New" onClick={() => { findByTime();}} />*/}
                         <div className="filter_button" onClick={findByTime}>
                             <div className="filter">New</div>
                         </div>
