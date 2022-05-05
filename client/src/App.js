@@ -14,10 +14,7 @@ import Profile from "./Profile";
 import Login from "./Login";
 
 
-import Login from './Login';
-import Register from './Register';
-import GamePage from './GamePage';
-import SearchResult from './SearchResult';
+
 
 
 
@@ -34,9 +31,6 @@ function App() {
 
             {/* <Route exact path="/" component={Search} /> */}
             {/* <Route exact path="/" component={Login} /> */}
-            <Route exact path="/" component={Register} />
-            <Route path="/game" component={GamePage} />
-            <Route path="/searchResult" component={SearchResult} />
 
         </BrowserRouter >
     );

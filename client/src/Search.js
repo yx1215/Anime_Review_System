@@ -30,6 +30,7 @@ export default function Search() {
     // };
 
     const searchHandler = (e) => {
+        e.preventDefault();
         setInput(e.target.value);
         console.log(input);
     }

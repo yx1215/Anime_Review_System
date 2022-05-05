@@ -4,24 +4,23 @@
     font-weight: normal;
     src: local('Bruno Ace SC Regular'), url('BrunoAceSC-Regular.woff') format('woff');
 }
+
 @font-face {
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: normal;
     src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
 }
-.body{
+
+.body {
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.title{
+
+.title {
     display: flex;
     /*justify-content: center;*/
-<<<<<<< HEAD
-=======
-
->>>>>>> c6048575ce11ea6a244e288ee22ffe66eab0c46c
     font-family: 'Bruno Ace SC Regular';
     font-size: 128px;
     font-weight: 400;
@@ -32,14 +31,15 @@
     /*width: 530px;*/
     top: 120px;
 }
-.searchBar{
+
+.searchBar {
     display: flex;
     align-items: center;
     position: absolute;
     top: 400px;
 }
 
-.input{
+.input {
     width: 667px;
     height: 70px;
     background: #EEF2F1;
@@ -47,7 +47,7 @@
     font-size: 36px;
 }
 
-.searchButton{
+.searchButton {
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: 400;
@@ -59,18 +59,18 @@
     border-width: 0;
 }
 
-.searchButton:hover{
+.searchButton:hover {
     cursor: pointer;
 }
 
-.otherInfo{
+.otherInfo {
     display: flex;
     /*align-items: center;*/
     position: absolute;
     bottom: 0;
 }
 
-.optionUnit{
+.optionUnit {
     display: flex;
     flex-direction: column;
     height: 250px;
@@ -80,7 +80,7 @@
     margin-right: 100px;
 }
 
-.text{
+.text {
     display: flex;
     margin-bottom: 20px;
 
@@ -93,7 +93,8 @@
     font-size: 55px;
     justify-content: center;
 }
-.line{
+
+.line {
     display: flex;
     width: 0px;
     height: 182px;
