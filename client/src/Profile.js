@@ -11,6 +11,7 @@ import ResultUnit from "./resultUnit";
 
 let userId;
 let avatar;
+let username;
 const link = 'http://localhost:8080';
 
 async function getUserInfo(id){
@@ -45,6 +46,8 @@ export default function Profile() {
     const [comments, setComments] = useState([]);
     if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
+    }else{
+        username = window.sessionStorage.getItem('username');
     }
     useEffect(()=>{
         getUserInfo(userId).then((result) => {
@@ -65,6 +68,9 @@ export default function Profile() {
     return (
         <div className="body">
             <Logo />
+            <div className="username">
+                {username}
+            </div>
             <div className="profile">
                 <div className="profileAvatar">
                    <img src={avatar} />

@@ -48,7 +48,7 @@ export default function Login() {
     return (
         <div className="body">
             <Logo />
-            <div className="title">
+            <div className="loginTitle">
                 Log in
             </div>
             <div className="Login">
