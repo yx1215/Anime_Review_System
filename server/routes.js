@@ -832,6 +832,38 @@ async function find_single_user(req, res) {
     )
 }
 
+async function friend_recommendation(req, res){
+    const userId = req.query.userId;
+    let query = `
+    WITH ONE_CONNECT_TOTAL AS (
+       SELECT LA1.userId AS ID1,
+              LA2.userId AS ID2
+       FROM likeAnime LA1 JOIN likeAnime LA2 on LA1.animeId = LA2.animeId
+       WHERE LA1.userId <> LA2.userId
+   ),
+   ONE_CONNECT AS (
+       SELECT * FROM ONE_CONNECT_TOTAL WHERE ID1 = '${userId}'
+   ),
+   TWO_CONNECT AS (
+       SELECT DISTINCT OC1.ID1 AS ID1, OC2.ID2 AS ID2
+       FROM ONE_CONNECT OC1 JOIN ONE_CONNECT_TOTAL OC2 ON OC1.ID2=OC2.ID1
+       WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 5
+   )
+    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 5)
+    UNION
+    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
+    `
+    connection.query(query,
+        function(error, results, fields){
+        if (error){
+            console.log(error)
+            res.json({error: error})
+        } else {
+            res.json({results: results})
+        }
+        })
+}
+
 
 module.exports = {
     homePage,
@@ -858,6 +890,7 @@ module.exports = {
 =======
     animations_sort_rating,
     animations_sort_aired,
-    animations_sort_most_viewed
+    animations_sort_most_viewed,
+    friend_recommendation
 }
 >>>>>>> e32246bdd643fa320ee1bd41771e0eecec212e2b
