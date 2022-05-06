@@ -256,15 +256,15 @@ async function animation(req, res) {
                  Anime A2 
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid}
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
-                } else {
-                    if (results) {
-                        res.json({results: results})
-                    }
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 }
-            })
+            }
+        })
     }
 }
 
@@ -809,7 +809,7 @@ async function find_single_user(req, res) {
     )
 }
 
-async function friend_recommendation(req, res){
+async function friend_recommendation(req, res) {
     const userId = req.query.userId;
     let query = `
     WITH ONE_CONNECT_TOTAL AS (
@@ -831,13 +831,13 @@ async function friend_recommendation(req, res){
     (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
     `
     connection.query(query,
-        function(error, results, fields){
-        if (error){
-            console.log(error)
-            res.json({error: error})
-        } else {
-            res.json({results: results})
-        }
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                res.json({ results: results })
+            }
         })
 }
 

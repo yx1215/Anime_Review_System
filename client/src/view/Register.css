@@ -86,6 +86,10 @@ input[type=password] {
     border-width: 0;
 }
 
+.registerButton:hover {
+    cursor: pointer;
+}
+
 
 .otherInfo {
     display: flex;
@@ -121,7 +125,7 @@ input[type=password] {
 .line {
     display: flex;
     width: 0px;
-    height: 162px;
+    height: 152px;
     bottom: 0px;
     border: 1px solid #000000;
     align-items: center;
