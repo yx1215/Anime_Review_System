@@ -172,6 +172,7 @@ export default function SearchResult() {
         } else if (friend != null) {
             getFriends().then((result) => {
                 setFriends(result);
+                setTotal(result.length)
                 setInput("Friendof=" + friend + ";");
             })
         } else {
