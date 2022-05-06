@@ -6,28 +6,27 @@ const bcrypt = require("bcrypt");
 
 
 const connection = mysql.createConnection({
-            host: config.rds_host,
-            user: config.rds_user,
-            password: config.rds_password,
-            port: config.rds_port,
-            database: config.project_db
-        })
+    host: config.rds_host,
+    user: config.rds_user,
+    password: config.rds_password,
+    port: config.rds_port,
+    database: config.project_db
+})
 
 connection.connect();
 // ********************************************
 //            Authentication
 // ********************************************
 
-async function homePage(req, res){
-    if (req.session.login){
+async function homePage(req, res) {
+    if (req.session.login) {
         const userId = req.session.userId
         const query =
             `
             SELECT * FROM RegisteredUser
             WHERE userId='${userId}'
             `
-        connection.query(query, function (error, results, fields)
-        {
+        connection.query(query, function (error, results, fields) {
             if (error) {
                 console.log(error)
                 res.json({ error: error })
@@ -42,13 +41,13 @@ async function homePage(req, res){
     }
 }
 
-async function loginPage(req, res){
+async function loginPage(req, res) {
     res.sendFile(__dirname + '/pages/login.html')
 }
 
-async function checkAuth(req, res, next){
+async function checkAuth(req, res, next) {
     console.log(req.session);
-    if (req.session.login){
+    if (req.session.login) {
         console.log("enter");
         next();
     }
@@ -62,73 +61,73 @@ async function checkAuth(req, res, next){
 async function loginHandler(req, res) {
     const username = req.body.username
     const password = req.body.password
-    if (username && password){
+    if (username && password) {
         const query = `SELECT userId, password FROM RegisteredUser
         WHERE nickname='${username}'`
         connection.query(query,
-            function (error, results, fields){
-            if (error) res.send(error);
-            else {
-                if (results.length > 0){
-                    req.session.login = true;
-                    req.session.userId = results[0].userId;
-                    res.send("log in successfully!");
-                } else {
-                    res.send("Invalid credential.");
+            function (error, results, fields) {
+                if (error) res.send(error);
+                else {
+                    if (results.length > 0) {
+                        req.session.login = true;
+                        req.session.userId = results[0].userId;
+                        res.send("log in successfully!");
+                    } else {
+                        res.send("Invalid credential.");
+                    }
                 }
-            }
             })
     } else {
         res.send("username and password are needed.")
     }
 }
 
-async function logout(req, res){
+async function logout(req, res) {
     req.session.login = false
     req.session.userId = null
     res.redirect("/login")
 }
 
-async function registerPage(req, res){
+async function registerPage(req, res) {
     res.sendFile(__dirname + "/pages/register.html")
 }
 
-async function registerHandler(req, res){
-    console.log("enter: "+JSON.stringify(req.body));
+async function registerHandler(req, res) {
+    console.log("enter: " + JSON.stringify(req.body));
 
     const username = req.body.username
     const password = req.body.password
-    console.log("username: "+username);
-    if (username && password){
+    console.log("username: " + username);
+    if (username && password) {
         const checkExistQuery = `SELECT userId, password FROM RegisteredUser
                                  WHERE nickname='${username}'`
         const insertQuery1 = `insert into User (userId) values ((select max(userid) + 1 from RegisteredUser));`
         const insertQuery2 = `insert into RegisteredUser (userId, password, nickname) values ((select max(userId) from User), 'password', '${username}');`
         connection.query(checkExistQuery,
-            function (error, results, fields){
-            if (error) res.send(error);
-            else {
-                if (results.length > 0){
-                    res.send("Duplicate Name: " + username)
-                } else {
-                    try {
-                        connection.query(insertQuery1,
-                            function (error) {
-                                if (error) res.send(error)
-                                else {
-                                    connection.query(insertQuery2,
-                                        function (error) {
-                                            if (error) res.send(error);
-                                            else res.send("Register complete.");
-                                        })
-                                }
-                            })
-                    } catch (error){
-                        res.send(error);
-                    }
+            function (error, results, fields) {
+                if (error) res.send(error);
+                else {
+                    if (results.length > 0) {
+                        res.send("Duplicate Name: " + username)
+                    } else {
+                        try {
+                            connection.query(insertQuery1,
+                                function (error) {
+                                    if (error) res.send(error)
+                                    else {
+                                        connection.query(insertQuery2,
+                                            function (error) {
+                                                if (error) res.send(error);
+                                                else res.send("Register complete.");
+                                            })
+                                    }
+                                })
+                        } catch (error) {
+                            res.send(error);
+                        }
 
+                    }
                 }
-            }
             })
 
     }
@@ -157,11 +156,11 @@ async function all_animations(req, res) {
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
             ORDER BY A2.title, A2.score DESC
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-        `, function (error, results, fields){
-            if (error){
+        `, function (error, results, fields) {
+            if (error) {
                 console.log(error)
                 res.json({ error: error })
-            } else if (results){
+            } else if (results) {
                 res.json({ results: results })
             }
         }
@@ -205,11 +204,11 @@ async function all_animations_separate(req, res) {
             WHERE A.title != 'Unknown' 
             ORDER BY A.title, A.score DESC
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-        `, function (error, results, fields){
-            if (error){
+        `, function (error, results, fields) {
+            if (error) {
                 console.log(error)
                 res.json({ error: error })
-            } else if (results){
+            } else if (results) {
                 res.json({ results: results })
             }
         }
@@ -240,7 +239,7 @@ async function all_animations_separate(req, res) {
 
 async function animation(req, res) {
     const animeid = req.query.id;
-    if (animeid){
+    if (animeid) {
         console.log(animeid)
         connection.query(
             `
@@ -255,33 +254,23 @@ async function animation(req, res) {
                               JOIN Producer D ON P.producerId = D.producerId 
                  GROUP BY A.animeID) AS AP,
                  Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid} AND A2.title != 'Unknown' 
-            `, function (error, results, field){
-                if (error){
-                    console.log(error)
-                    res.json({ error: error })
-                }
-                else {
-                    if (results){
-                        res.json( {results: results})
-                    }
-                    else {
-                        res.json({results: []})
-                    }
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND AG.animeID = ${animeid}
+            `, function (error, results, field) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 }
             }
-        )
+        })
     }
-
-    else {
-        res.json({error: "id needed."})
-    }
-
 }
 
 async function comments(req, res) {
     const animeid = req.query.id;
-    if (animeid){
+    if (animeid) {
         console.log(animeid)
         connection.query(
             `
@@ -289,25 +278,25 @@ async function comments(req, res) {
             FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId 
                          JOIN RegisteredUser RU ON R.userId = RU.userId 
             WHERE A.animeID = ${animeid} 
-            `, function (error, results, field){
-                if (error){
-                    console.log(error)
-                    res.json({ error: error })
+            `, function (error, results, field) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            }
+            else {
+                if (results) {
+                    res.json({ results: results })
                 }
                 else {
-                    if (results){
-                        res.json( {results: results})
-                    }
-                    else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
 
     else {
-        res.json({error: "id needed."})
+        res.json({ error: "id needed." })
     }
 
 }
@@ -316,9 +305,9 @@ async function search_animations(req, res) {
     const title = req.query.Title ? req.query.Title : ''
     const synopsis = req.query.Synopsis ? req.query.Synopsis : ''
     const genre = req.query.Genre ? req.query.Genre : ''
-    const producer = req.query.Producer ? req.query.Producer: ''
+    const producer = req.query.Producer ? req.query.Producer : ''
     const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize :10
+    const pagesize = req.query.pagesize ? req.query.pagesize : 10
     console.log(title)
     if (page && !isNaN(page)) {
         connection.query(
@@ -340,17 +329,17 @@ async function search_animations(req, res) {
             ORDER BY A2.score DESC, A2.title
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
     else {
@@ -373,24 +362,24 @@ async function search_animations(req, res) {
                   AND A2.title != 'Unknown' 
             ORDER BY A2.score DESC, A2.title;
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
 }
 
 async function animations_sort_rating(req, res) {
     const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize :10
+    const pagesize = req.query.pagesize ? req.query.pagesize : 10
     if (page && !isNaN(page)) {
         connection.query(
             `
@@ -409,17 +398,17 @@ async function animations_sort_rating(req, res) {
             ORDER BY A2.score DESC, A2.title
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
     else {
@@ -439,24 +428,24 @@ async function animations_sort_rating(req, res) {
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
             ORDER BY A2.score DESC, A2.title
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
 }
 
 async function animations_sort_aired(req, res) {
     const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize :10
+    const pagesize = req.query.pagesize ? req.query.pagesize : 10
     if (page && !isNaN(page)) {
         connection.query(
             `
@@ -477,17 +466,17 @@ async function animations_sort_aired(req, res) {
             ORDER BY aired DESC, A2.title
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
     else {
@@ -509,24 +498,24 @@ async function animations_sort_aired(req, res) {
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
             ORDER BY aired DESC, A2.title
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
 }
 
 async function animations_sort_most_viewed(req, res) {
     const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize :10
+    const pagesize = req.query.pagesize ? req.query.pagesize : 10
     if (page && !isNaN(page)) {
         connection.query(
             `
@@ -550,17 +539,17 @@ async function animations_sort_most_viewed(req, res) {
             ORDER BY V.num_viewers DESC, A2.title
             LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
     else {
@@ -585,29 +574,101 @@ async function animations_sort_most_viewed(req, res) {
             WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND V.animeId = A2.animeId AND A2.title != 'Unknown'
             ORDER BY V.num_viewers DESC, A2.title;
             `, function (error, results, field) {
-                if (error) {
-                    console.log(error)
-                    res.json({error: error})
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
                 } else {
-                    if (results) {
-                        res.json({results: results})
-                    } else {
-                        res.json({results: []})
-                    }
+                    res.json({ results: [] })
                 }
             }
+        }
         )
     }
 }
 
+async function animations_sort_producer_aired(req, res) {
+    const producer = req.query.Producer ? req.query.Producer : ''
+    const page = req.query.page
+    const pagesize = req.query.pagesize ? req.query.pagesize : 10
+    if (page && !isNaN(page)) {
+        connection.query(
+            `
+            SELECT A2.animeId, A2.title, A2.age_rate, 
+                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
+                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                 Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
+                  AP.producers LIKE '%${producer}%'
+            ORDER BY aired DESC, A2.title
+            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
+            `, function (error, results, field) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
+                } else {
+                    res.json({ results: [] })
+                }
+            }
+        }
+        )
+    }
+    else {
+        connection.query(
+            `
+            SELECT A2.animeId, A2.title, A2.age_rate, 
+                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
+                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+            FROM 
+                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                              JOIN Genre G ON B.genreId = G.genreId
+                 GROUP BY A.animeID) AS AG, 
+                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                              JOIN Producer D ON P.producerId = D.producerId 
+                 GROUP BY A.animeID) AS AP,
+                 Anime A2 
+            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
+                  AP.producers LIKE '%${producer}%'
+            ORDER BY aired DESC, A2.title
+            `, function (error, results, field) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                if (results) {
+                    res.json({ results: results })
+                } else {
+                    res.json({ results: [] })
+                }
+            }
+        }
+        )
+    }
+}
 
 // ********************************************
 //               GENERAL ROUTES
 // ********************************************
 
-async function all_user(req, res){
+async function all_user(req, res) {
     let query;
-    if (req.query.page && !isNaN(req.query.page)){
+    if (req.query.page && !isNaN(req.query.page)) {
         const page = req.query.page;
         const pagesize = req.query.pagesize ? req.query.pagesize : 10;
         query = `
@@ -660,10 +721,10 @@ async function all_user(req, res){
     )
 }
 
-async function search_users(req, res){
+async function search_users(req, res) {
     const nickname = req.query.nickname
     let query;
-    if (req.query.page && !isNaN(req.query.page)){
+    if (req.query.page && !isNaN(req.query.page)) {
         const page = req.query.page;
         const pagesize = req.query.pagesize ? req.query.pagesize : 10;
         query = `
@@ -675,7 +736,7 @@ async function search_users(req, res){
                 WHERE l.animeRank <= 5
             ),
             UserLike AS (
-                SELECT RU.nickname, RU.age, RU.gender,
+                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
                        GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
                        GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
                 FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
@@ -695,7 +756,7 @@ async function search_users(req, res){
                 WHERE l.animeRank <= 5
             ),
             UserLike AS (
-                SELECT RU.nickname, RU.age, RU.gender,
+                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
                        GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
                        GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
                 FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
@@ -716,7 +777,7 @@ async function search_users(req, res){
     )
 }
 
-async function find_single_user(req, res){
+async function find_single_user(req, res) {
     const userId = req.query.userId
     let query = `
     WITH PartialLike AS (
@@ -736,16 +797,48 @@ async function find_single_user(req, res){
             SELECT * FROM UserLike NATURAL JOIN ReviewedBy WHERE userId=${userId};
     `
     connection.query(query,
-        function(error, results, fields){
-            if (error){
+        function (error, results, fields) {
+            if (error) {
                 console.log(error)
-                res.json({error: error})
+                res.json({ error: error })
             } else {
-                res.json({results: results})
+                res.json({ results: results })
             }
         }
 
-        )
+    )
+}
+
+async function friend_recommendation(req, res) {
+    const userId = req.query.userId;
+    let query = `
+    WITH ONE_CONNECT_TOTAL AS (
+       SELECT LA1.userId AS ID1,
+              LA2.userId AS ID2
+       FROM likeAnime LA1 JOIN likeAnime LA2 on LA1.animeId = LA2.animeId
+       WHERE LA1.userId <> LA2.userId
+   ),
+   ONE_CONNECT AS (
+       SELECT * FROM ONE_CONNECT_TOTAL WHERE ID1 = '${userId}'
+   ),
+   TWO_CONNECT AS (
+       SELECT DISTINCT OC1.ID1 AS ID1, OC2.ID2 AS ID2
+       FROM ONE_CONNECT OC1 JOIN ONE_CONNECT_TOTAL OC2 ON OC1.ID2=OC2.ID1
+       WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 5
+   )
+    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 5)
+    UNION
+    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
+    `
+    connection.query(query,
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                res.json({ results: results })
+            }
+        })
 }
 
 
@@ -765,7 +858,9 @@ module.exports = {
     all_user,
     search_users,
     find_single_user,
+    animations_sort_producer_aired,
     animations_sort_rating,
     animations_sort_aired,
-    animations_sort_most_viewed
+    animations_sort_most_viewed,
+    friend_recommendation
 }
