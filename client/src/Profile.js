@@ -8,6 +8,8 @@ import anime from './image/anime.jpeg';
 import AnimeDisplayed from "./AnimeDisplayedUnit";
 import axios from "axios";
 import ResultUnit from "./resultUnit";
+import { Pagination } from 'antd';
+import 'antd/dist/antd.css';
 
 let userId;
 let avatar;
@@ -16,6 +18,12 @@ const link = 'http://localhost:8080';
 
 async function getUserInfo(id){
     const info = await axios.get(`${link}/search/single_user?userId=${id}`).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+async function getUserComments(id){
+    const info = await axios.get(`${link}/comments/user?userId=${id}`).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
@@ -44,6 +52,11 @@ export default function Profile() {
     const [info, setInfo] = useState({});
     const [animeInfo, setAnimeInfo] = useState([]);
     const [comments, setComments] = useState([]);
+
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pagesize, setPagesize] = useState(3);
+
     if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }else{
@@ -52,7 +65,6 @@ export default function Profile() {
     useEffect(()=>{
         getUserInfo(userId).then((result) => {
             setInfo(result[0]);
-            setComments(result);
             if(result[0].gender==="Male"){
                 avatar=male;
             }else if(result[0].gender==="Female"){
@@ -62,7 +74,13 @@ export default function Profile() {
             }
             setAnimeInfo(setupAnimes(result[0].likeAnime, result[0].likeAnimeImg));
         });
-    }, [])
+        getUserComments(userId).then((result) => {
+            console.log(result);
+            setTotal(result.length)
+            setComments(result);
+        })
+    },
+        [])
     console.log(info);
 
     return (
@@ -91,15 +109,30 @@ export default function Profile() {
 
                 <div className="profileInfo">
                     <div className="typeText">Recent Commented</div>
-                    {(comments != null && comments.map((one) => (
+                    {(comments != null && comments.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <div className="commentHistoryUnit" onClick={()=>{redirectToAnime(one.animeId)}}>
                             <div>
                                 <img src={avatar}/>
+                                <div>Anime: {one.title}</div>
                                 <div>Rating: {one.rating}</div>
+
                             </div>
                             <div className="commentHistoryText">{one.comments}</div>
                         </div>
                     )))}
+                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
+                        <Pagination
+                        total={total}
+                        showSizeChanger
+                        showTotal={total => `Total ${total} comments`}
+                        onChange={(page, pagesize) => {
+                            setPage(page);
+                            setPagesize(pagesize);
+                        }}
+                        pageSizeOptions={[3, 5, 10]}
+                        defaultPageSize={3}
+                      />
+                    </div>
 
                 </div>
             </div>

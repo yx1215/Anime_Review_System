@@ -5,6 +5,7 @@ import Logo from './Logo';
 import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
 import Rating from 'react-star-rating-lite';
+import {Pagination} from "antd";
 
 let animeId = null;
 let username;
@@ -16,7 +17,7 @@ async function getGameInfo(id){
 }
 
 async function getGameComments(id){
-    const info = await axios.get(`${link}/comments?id=${id}`).catch((err) => { console.log(err); });
+    const info = await axios.get(`${link}/comments/anime?animeid=${id}`).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
@@ -32,6 +33,10 @@ export default function GamePage(){
     const [info, setInfo] = useState({});
     const [comments, setComments] = useState([]);
 
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pagesize, setPagesize] = useState(3);
+
     if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }else{
@@ -43,6 +48,7 @@ export default function GamePage(){
             setInfo(result);
         });
         getGameComments(animeId).then((result) => {
+            setTotal(result.length)
             setComments(result);
         });
     }, [])
@@ -75,7 +81,7 @@ export default function GamePage(){
                 </div>
                 <div className="gameComments">
                     <div className="comments">Comments</div>
-                    {(comments != null && comments.map((one) => (
+                    {(comments != null && comments.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <div className="gameCommentUnit" onClick={() => { getUserInfo(one.userId); }}>
                             <div className="userCol">
                                 {/*<img src={avatar}/>*/}
@@ -88,6 +94,19 @@ export default function GamePage(){
                             </div>
                         </div>
                     )))}
+                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
+                        <Pagination
+                        total={total}
+                        showSizeChanger
+                        showTotal={total => `Total ${total} comments`}
+                        onChange={(page, pagesize) => {
+                            setPage(page);
+                            setPagesize(pagesize);
+                        }}
+                        pageSizeOptions={[3, 5, 10]}
+                        defaultPageSize={3}
+                      />
+                    </div>
                 </div>
             </div>
         </div>

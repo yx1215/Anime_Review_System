@@ -4,12 +4,12 @@ import female from "./image/woman.jpeg";
 import male from "./image/male.jpeg";
 import unknown from "./image/unknown.jpeg";
 
-function getDetails(){
-    window.location.replace(`/profile?userId=${user.userId}`);
-}
 let user;
 let avatar;
 export default function UserResultUnit({userObj}){
+    function getDetails(){
+    window.location.replace(`/profile?userId=${userObj.userId}`);
+    }
     useEffect(()=>{
         user = userObj;
         // if(userObj.gender==="Male"){

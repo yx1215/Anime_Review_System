@@ -138,99 +138,47 @@ async function registerHandler(req, res) {
 // ********************************************
 // animations/all route: return anime information with all grouped genres + producers
 async function all_animations(req, res) {
-    if (req.query.page && !isNaN(req.query.page)) {
-        const page = req.query.page;
-        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
-        connection.query(`
-            SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
-            ORDER BY A2.title, A2.score DESC
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
+    connection.query(`
+        SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+        FROM 
+            (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+             FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                          JOIN Genre G ON B.genreId = G.genreId
+             GROUP BY A.animeID) AS AG, 
+            (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+             FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                          JOIN Producer D ON P.producerId = D.producerId 
+             GROUP BY A.animeID) AS AP,
+            Anime A2 
+        WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
+        ORDER BY A2.title, A2.score DESC
+    `, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
         }
-        )
-    } else {
-        connection.query(`
-            SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
-            ORDER BY A2.title, A2.score DESC
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
+    });
 }
 
 async function all_animations_separate(req, res) {
-    if (req.query.page && !isNaN(req.query.page)) {
-        const page = req.query.page;
-        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
-        connection.query(`
-            SELECT A.animeId, A.title, A.age_rate, A.aired, A.type, A.score, A.img_url, G.genreName AS genre, D.producerName AS producer 
-            FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                         JOIN Genre G ON B.genreId = G.genreId
-                         JOIN Produces P ON A.animeID = P.animeID
-                         JOIN Producer D ON P.producerId = D.producerId 
-            WHERE A.title != 'Unknown' 
-            ORDER BY A.title, A.score DESC
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
+    connection.query(`
+        SELECT A.animeId, A.title, A.age_rate, A.aired, A.type, A.score, A.img_url, G.genreName AS genre, D.producerName AS producer 
+        FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                     JOIN Genre G ON B.genreId = G.genreId
+                     JOIN Produces P ON A.animeID = P.animeID
+                     JOIN Producer D ON P.producerId = D.producerId 
+        WHERE A.title != 'Unknown' 
+        ORDER BY A.title, A.score DESC
+    `, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
         }
-        )
-    } else {
-        connection.query(`
-            SELECT A.animeId, A.title, A.age_rate, A.aired, A.type, A.score, A.img_url, G.genreName AS genre, D.producerName AS producer 
-            FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                         JOIN Genre G ON B.genreId = G.genreId
-                         JOIN Produces P ON A.animeID = P.animeID
-                         JOIN Producer D ON P.producerId = D.producerId 
-            WHERE A.title != 'Unknown' 
-            ORDER BY A.title, A.score DESC
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
+    });
 }
 
 // ********************************************
@@ -268,16 +216,49 @@ async function animation(req, res) {
     }
 }
 
-async function comments(req, res) {
-    const animeid = req.query.id;
+async function find_comments_for_anime(req, res) {
+    const animeid = req.query.animeid;
     if (animeid) {
         console.log(animeid)
         connection.query(
             `
-            SELECT DISTINCT A.animeId, RU.userId, RU.nickname, R.comments, R.rating 
+            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating 
             FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId 
                          JOIN RegisteredUser RU ON R.userId = RU.userId 
             WHERE A.animeID = ${animeid} 
+            `, function (error, results, field) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            }
+            else {
+                if (results) {
+                    res.json({ results: results })
+                }
+                else {
+                    res.json({ results: [] })
+                }
+            }
+        }
+        )
+    }
+
+    else {
+        res.json({ error: "id needed." })
+    }
+
+}
+
+async function find_comments_for_user(req, res) {
+    const userId = req.query.userId;
+    if (userId) {
+        console.log(userId)
+        connection.query(
+            `
+            SELECT A.animeId, A.title, RU.userId, RU.nickname, R.comments, R.rating 
+            FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId 
+                         JOIN RegisteredUser RU ON R.userId = RU.userId 
+            WHERE RU.userId = ${userId} 
             `, function (error, results, field) {
             if (error) {
                 console.log(error)
@@ -306,328 +287,143 @@ async function search_animations(req, res) {
     const synopsis = req.query.Synopsis ? req.query.Synopsis : ''
     const genre = req.query.Genre ? req.query.Genre : ''
     const producer = req.query.Producer ? req.query.Producer : ''
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize : 10
-    console.log(title)
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.synopsis, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
-                  A2.title LIKE '%${title}%' AND A2.synopsis LIKE '%${synopsis}%' AND 
-                  AG.genres LIKE '%${genre}%' AND AP.producers LIKE '%${producer}%' AND A2.title != 'Unknown' 
-            ORDER BY A2.score DESC, A2.title
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
+    connection.query(
+        `
+        SELECT A2.animeId, A2.title, A2.synopsis, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+        FROM 
+            (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+             FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                          JOIN Genre G ON B.genreId = G.genreId
+             GROUP BY A.animeID) AS AG, 
+             (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+             FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                          JOIN Producer D ON P.producerId = D.producerId 
+             GROUP BY A.animeID) AS AP,
+             Anime A2 
+        WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
+              A2.title LIKE '%${title}%' AND A2.synopsis LIKE '%${synopsis}%' AND 
+              AG.genres LIKE '%${genre}%' AND AP.producers LIKE '%${producer}%'
+              AND A2.title != 'Unknown' 
+        ORDER BY A2.score DESC, A2.title;
+        `, function (error, results, field) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else {
+            if (results) {
+                res.json({ results: results })
             } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
+                res.json({ results: [] })
             }
         }
-        )
     }
-    else {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.synopsis, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
-                  A2.title LIKE '%${title}%' AND A2.synopsis LIKE '%${synopsis}%' AND 
-                  AG.genres LIKE '%${genre}%' AND AP.producers LIKE '%${producer}%'
-                  AND A2.title != 'Unknown' 
-            ORDER BY A2.score DESC, A2.title;
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
+    )
 }
 
 async function animations_sort_rating(req, res) {
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize : 10
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
-            ORDER BY A2.score DESC, A2.title
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
+    connection.query(
+        `
+        SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+        FROM 
+            (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+             FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                          JOIN Genre G ON B.genreId = G.genreId
+             GROUP BY A.animeID) AS AG, 
+             (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+             FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                          JOIN Producer D ON P.producerId = D.producerId 
+             GROUP BY A.animeID) AS AP,
+             Anime A2 
+        WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
+        ORDER BY A2.score DESC, A2.title
+        `, function (error, results, field) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else {
+            if (results) {
+                res.json({ results: results })
             } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
+                res.json({ results: [] })
             }
         }
-        )
     }
-    else {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, A2.aired, A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
-            ORDER BY A2.score DESC, A2.title
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
+    )
 }
 
 async function animations_sort_aired(req, res) {
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize : 10
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, 
-                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
-                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
-            ORDER BY aired DESC, A2.title
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
+    connection.query(
+        `
+        SELECT A2.animeId, A2.title, A2.age_rate, 
+               STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
+               A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
+        FROM 
+            (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+             FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
+                          JOIN Genre G ON B.genreId = G.genreId
+             GROUP BY A.animeID) AS AG, 
+             (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
+             FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                          JOIN Producer D ON P.producerId = D.producerId 
+             GROUP BY A.animeID) AS AP,
+             Anime A2 
+        WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
+        ORDER BY aired DESC, A2.title
+        `, function (error, results, field) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else {
+            if (results) {
+                res.json({ results: results })
             } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
+                res.json({ results: [] })
             }
         }
-        )
     }
-    else {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, 
-                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
-                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND A2.title != 'Unknown' 
-            ORDER BY aired DESC, A2.title
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
+    )
 }
 
 async function animations_sort_most_viewed(req, res) {
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize : 10
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, A2.type, A2.score, A2.img_url,
-                   V.num_viewers, AG.genres AS genre, AP.producers AS producer
-            FROM
-                (SELECT A.animeId, COUNT(*) AS num_viewers
-                 FROM Anime A JOIN Watched W ON A.animeId = W.animeID
-                              JOIN User U on W.userid = U.userId
-                 GROUP BY A.animeId) AS V,
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG,
-                (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId
-                 GROUP BY A.animeID) AS AP,
-                Anime A2
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND V.animeId = A2.animeId AND A2.title != 'Unknown'
-            ORDER BY V.num_viewers DESC, A2.title
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
+
+    connection.query(
+        `
+        SELECT A2.animeId, A2.aired, A2.title, A2.age_rate, A2.type, A2.score, A2.img_url,
+               V.num_viewers, AG.genres AS genre, AP.producers AS producer
+        FROM
+            (SELECT A.animeId, COUNT(*) AS num_viewers
+             FROM Anime A JOIN Watched W ON A.animeId = W.animeID
+                          JOIN User U on W.userid = U.userId
+             GROUP BY A.animeId) AS V,
+            (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
+             FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId
+                          JOIN Genre G ON B.genreId = G.genreId
+             GROUP BY A.animeID) AS AG,
+            (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers
+             FROM Anime A JOIN Produces P ON A.animeID = P.animeID
+                          JOIN Producer D ON P.producerId = D.producerId
+             GROUP BY A.animeID) AS AP,
+            Anime A2
+        WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND V.animeId = A2.animeId AND A2.title != 'Unknown'
+        ORDER BY V.num_viewers DESC, A2.title;
+        `, function (error, results, field) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else {
+            if (results) {
+                res.json({ results: results })
             } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
+                res.json({ results: [] })
             }
         }
-        )
     }
-    else {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, A2.type, A2.score, A2.img_url,
-                   V.num_viewers, AG.genres AS genre, AP.producers AS producer
-            FROM
-                (SELECT A.animeId, COUNT(*) AS num_viewers
-                 FROM Anime A JOIN Watched W ON A.animeId = W.animeID
-                              JOIN User U on W.userid = U.userId
-                 GROUP BY A.animeId) AS V,
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG,
-                (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId
-                 GROUP BY A.animeID) AS AP,
-                Anime A2
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND V.animeId = A2.animeId AND A2.title != 'Unknown'
-            ORDER BY V.num_viewers DESC, A2.title;
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
+    )
+
 }
 
 async function animations_sort_producer_aired(req, res) {
     const producer = req.query.Producer ? req.query.Producer : ''
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize : 10
-    if (page && !isNaN(page)) {
-        connection.query(
-            `
-            SELECT A2.animeId, A2.title, A2.age_rate, 
-                   STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
-                   A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
-            FROM 
-                (SELECT A.animeID, GROUP_CONCAT(G.genreName ORDER BY G.genreName ASC SEPARATOR ', ') AS genres
-                 FROM Anime A JOIN BelongTo B ON A.animeID= B.animeId 
-                              JOIN Genre G ON B.genreId = G.genreId
-                 GROUP BY A.animeID) AS AG, 
-                 (SELECT A.animeID, GROUP_CONCAT(D.producerName ORDER BY D.producerName ASC SEPARATOR ', ') AS producers 
-                 FROM Anime A JOIN Produces P ON A.animeID = P.animeID
-                              JOIN Producer D ON P.producerId = D.producerId 
-                 GROUP BY A.animeID) AS AP,
-                 Anime A2 
-            WHERE AG.animeID = AP.animeID AND A2.animeID = AG.animeID AND 
-                  AP.producers LIKE '%${producer}%'
-            ORDER BY aired DESC, A2.title
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
-            }
-        }
-        )
-    }
-    else {
         connection.query(
             `
             SELECT A2.animeId, A2.title, A2.age_rate, 
@@ -657,9 +453,7 @@ async function animations_sort_producer_aired(req, res) {
                     res.json({ results: [] })
                 }
             }
-        }
-        )
-    }
+        })
 }
 
 // ********************************************
@@ -667,31 +461,7 @@ async function animations_sort_producer_aired(req, res) {
 // ********************************************
 
 async function all_user(req, res) {
-    let query;
-    if (req.query.page && !isNaN(req.query.page)) {
-        const page = req.query.page;
-        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
-        query = `
-            WITH PartialLike AS (
-                SELECT * FROM(
-                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
-                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
-                        ) as l
-                WHERE l.animeRank <= 5
-            ),
-            UserLike AS (
-                SELECT RU.nickname, RU.age, RU.gender,
-                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
-                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
-                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
-                GROUP BY RU.userId
-            )
-            SELECT * FROM UserLike
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `
-    }
-    else {
-        query = `
+    let query = `
             WITH PartialLike AS (
                 SELECT * FROM(
                         SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
@@ -708,7 +478,6 @@ async function all_user(req, res) {
             )
             SELECT * FROM UserLike;
             `
-    }
     connection.query(query,
         function (error, results, fields) {
             if (error) {
@@ -724,47 +493,23 @@ async function all_user(req, res) {
 async function search_users(req, res) {
     const nickname = req.query.nickname
     let query;
-    if (req.query.page && !isNaN(req.query.page)) {
-        const page = req.query.page;
-        const pagesize = req.query.pagesize ? req.query.pagesize : 10;
-        query = `
-            WITH PartialLike AS (
-                SELECT * FROM(
-                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
-                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
-                        ) as l
-                WHERE l.animeRank <= 5
-            ),
-            UserLike AS (
-                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
-                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
-                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
-                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
-                GROUP BY RU.userId
-            )
-            SELECT * FROM UserLike
-            LIMIT ${pagesize} OFFSET ${pagesize * (page - 1)};
-            `
-    }
-    else {
-        query = `
-            WITH PartialLike AS (
-                SELECT * FROM(
-                        SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
-                        FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
-                        ) as l
-                WHERE l.animeRank <= 5
-            ),
-            UserLike AS (
-                SELECT RU.userId, RU.nickname, RU.age, RU.gender,
-                       GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
-                       GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
-                FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
-                GROUP BY RU.userId
-            )
-            SELECT * FROM UserLike WHERE nickname LIKE '%${nickname}%';
-            `
-    }
+    query = `
+        WITH PartialLike AS (
+            SELECT * FROM(
+                    SELECT likeAnime.userId as userId, A2.animeId as animeId, A2.title as title, A2.img_url as img_url,  row_number() over (partition by likeAnime.userId order by A2.score DESC) AS animeRank
+                    FROM likeAnime JOIN Anime A2 on A2.animeId = likeAnime.animeId
+                    ) as l
+            WHERE l.animeRank <= 5
+        ),
+        UserLike AS (
+            SELECT RU.userId, RU.nickname, RU.age, RU.gender,
+                   GROUP_CONCAT(PL.title ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnime,
+                   GROUP_CONCAT(PL.img_url ORDER BY PL.animeRank ASC SEPARATOR ', ') AS likeAnimeImg
+            FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
+            GROUP BY RU.userId
+        )
+        SELECT * FROM UserLike WHERE nickname LIKE '%${nickname}%';
+        `
     connection.query(query,
         function (error, results, fields) {
             if (error) {
@@ -794,7 +539,7 @@ async function find_single_user(req, res) {
                 FROM RegisteredUser RU LEFT JOIN PartialLike PL on RU.userId=PL.userId
                 GROUP BY RU.userId
             )
-            SELECT * FROM UserLike NATURAL JOIN ReviewedBy WHERE userId=${userId};
+            SELECT * FROM UserLike WHERE userId=${userId};
     `
     connection.query(query,
         function (error, results, fields) {
@@ -841,6 +586,39 @@ async function friend_recommendation(req, res) {
         })
 }
 
+async function user_favourite_genre(req, res){
+    const userId = req.query.userId
+
+    let query = `
+    WITH TEMP_GENRE AS (
+        SELECT R.userId, G.genreId, COUNT(G.genreId) AS num_genres
+        FROM RegisteredUser R JOIN Watched W on R.userId = W.userid
+                              JOIN Anime A on W.animeID = A.animeId
+                              JOIN BelongTo B ON A.animeId = B.animeId
+                              JOIN Genre G ON B.genreId = G.genreId
+        GROUP BY  R.userId, G.genreId
+        ORDER BY  R.userId
+    ),
+        user_favorite_genre AS(
+            SELECT T.userId, R.age, T.genreId, G.genreName, T.num_genres, row_number() over (PARTITION BY T.userId ORDER BY T.num_genres DESC) AS rank_genres
+            FROM TEMP_GENRE T JOIN Genre G ON T.genreId = G.genreId
+                        JOIN RegisteredUser R ON R.userId= T.userId
+    )
+    SELECT FG.userId, FG.age, FG.genreName
+    FROM user_favorite_genre FG
+    WHERE FG.num_genres > 1 AND FG.rank_genres <= 2 AND FG.userId=${userId};`
+
+    connection.query(query,
+        function(error, results, fields){
+        if (error){
+            console.log(error)
+            res.json({error: error})
+        } else {
+            res.json({results: results})
+        }
+        })
+}
+
 
 module.exports = {
     homePage,
@@ -853,7 +631,8 @@ module.exports = {
     all_animations,
     all_animations_separate,
     animation,
-    comments,
+    find_comments_for_user,
+    find_comments_for_anime,
     search_animations,
     all_user,
     search_users,
@@ -862,5 +641,6 @@ module.exports = {
     animations_sort_rating,
     animations_sort_aired,
     animations_sort_most_viewed,
-    friend_recommendation
+    friend_recommendation,
+    user_favourite_genre
 }
