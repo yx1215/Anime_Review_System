@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import anime from "./image/anime.jpeg";
-import female from "./image/woman.jpeg";
-import male from "./image/male.jpeg";
-import unknown from "./image/unknown.jpeg";
+
 
 let friend;
 let avatar;
