@@ -23,6 +23,7 @@ let animeScore;
 let animePopularity;
 let friend;
 let user;
+let avgScore;
 
 async function getGame() {
     let url = `${link}/search/animations?`;
@@ -109,6 +110,13 @@ async function getGameBasedOnRecommendation() {
     return info.data.results;
 }
 
+async function getGameBasedOnAvgScore() {
+    let url = `${link}/animations/sort_most_viewed`;
+    const info = await axios.get(url).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
 
 export default function SearchResult() {
     let search = window.location.search;
@@ -121,7 +129,9 @@ export default function SearchResult() {
     animeScore = params.get('Score');
     animePopularity = params.get('Popularity');
     user = params.get('User');
-    friend = params.get('Friendof')
+    avgScore = params.get('AvgScore');
+    friend = params.get('Friendof');
+
     const [game, setGame] = useState([]);
     const [users, setUsers] = useState([]);
     const [friends, setFriends] = useState([]);
@@ -169,6 +179,12 @@ export default function SearchResult() {
             //         setFriends(result);
             //         setInput("Recommendation=1;");
             //     })
+        } else if (avgScore === "1") {
+            getGameBasedOnAvgScore().then((result) => {
+                setGame(result);
+                setTotal(result.length);
+                setInput("avgScore=1;");
+            })
         } else if (friend != null) {
             getFriends().then((result) => {
                 setFriends(result);
@@ -229,6 +245,10 @@ export default function SearchResult() {
     //     console.log(e.target.value);
     //     window.location.replace(`/searchResult?Recommendation=1`);
     // }
+    function findByAvgScore(e) {
+        console.log(e.target.value);
+        window.location.replace(`/searchResult?AvgScore=1`);
+    }
 
     function changeInput(e) {
         setInput(e.target.value);
@@ -243,8 +263,8 @@ export default function SearchResult() {
             window.location.replace(`/searchResult?Score=1`);
         } else if (input === "Popularity=1;") {
             window.location.replace(`/searchResult?Popularity=1`);
-            // } else if (input === "Recommendation=1;") {
-            //     window.location.replace(`/searchResult?Recommendation=1`);
+        } else if (input === "AvgScore=1;") {
+            window.location.replace(`/searchResult?AvgScore=1`);
         }
         var varibles = input.split(";");
         for (var i = 0; i < varibles.length; i++) {
@@ -312,6 +332,9 @@ export default function SearchResult() {
                         </div>
                         <div className="filter_button" onClick={findFriends}>
                             <div className="filter">Friends</div>
+                        </div>
+                        <div className="filter_button" onClick={findByAvgScore}>
+                            <div className="filter">Score upon Completion</div>
                         </div>
                     </div>
                 </div>
