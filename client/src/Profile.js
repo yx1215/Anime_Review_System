@@ -6,7 +6,7 @@ import male from "./image/male.jpeg";
 import unknown from "./image/unknown.jpeg";
 import anime from './image/anime.jpeg';
 import AnimeDisplayed from "./AnimeDisplayedUnit";
-import FriendDisplayed from "./FriendDisplayedUnit";
+import FriendDisplayed from "./FriendRecommendUnit";
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 import { Pagination } from 'antd';
@@ -14,7 +14,6 @@ import 'antd/dist/antd.min.css'
 
 let userId;
 let avatar;
-let friend;
 let username;
 const link = 'http://localhost:8080';
 
@@ -30,22 +29,21 @@ async function getUserComments(id) {
     return info.data.results;
 }
 
-// async function getFriends(id) {
-//     const info = await axios.get(`${link}/recommend_friends?userId=${id}`).catch((err) => { console.log(err); });
-//     console.log(info);
-//     return info.data.results;
-// }
-
 async function getFriends(id) {
-    let result = [];
-    let url = `${link}/recommend_friends?userId=${id}`;
-    const info = await axios.get(url).catch((err) => { console.log(err); });
-    if (info.data.error || info.data.results.length === 0) {
-        console.log(info);
-    } else {
-        result = result.concat(info.data.results);
-    }
-    return result;
+    const info = await axios.get(`${link}/recommend_friends?userId=${id}`).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+async function getFavGenre(id) {
+    const info = await axios.get(`${link}/user/fav_genres?userId=${id}`).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+function logout() {
+    window.sessionStorage.clear();
+    window.location.replace(`/login`)
 }
 
 function setupAnimes(nameList, imgList) {
@@ -62,23 +60,16 @@ function setupAnimes(nameList, imgList) {
     return result;
 }
 
-function checkGender(gender) {
-    if (gender === "Male") {
-        friend = male;
-    } else if (gender === "Female") {
-        friend = female;
-    } else {
-        friend = unknown;
-    }
-    return friend;
-}
-
 function redirectToAnime(animeId) {
     window.location.replace(`/game?id=${animeId}`);
 }
 
-function redirectToFriend(userId) {
-    window.location.replace(`/profile?userId=${userId}`);
+function setupFavGenre(results) {
+    let genres = []
+    for (let i = 0; i < results.length; i++) {
+        genres.push(results[i].genreName)
+    }
+    return genres;
 }
 
 export default function Profile() {
@@ -87,16 +78,13 @@ export default function Profile() {
     userId = params.get('userId');
     const [info, setInfo] = useState({});
     const [animeInfo, setAnimeInfo] = useState([]);
+    const [friendInfo, setFriendInfo] = useState([]);
     const [comments, setComments] = useState([]);
-    const [friends, setFriends] = useState([]);
+    const [favGenre, setFavGenre] = useState([]);
 
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const [pagesize, setPagesize] = useState(3);
-
-    const [totalFriend, setTotalFriend] = useState(0);
-    const [pageFriend, setPageFriend] = useState(1);
-    const [pagesizeFriend, setPagesizeFriend] = useState(3);
 
     if (!window.sessionStorage.getItem('username')) {
         window.location.replace("/login");
@@ -116,13 +104,17 @@ export default function Profile() {
             setAnimeInfo(setupAnimes(result[0].likeAnime, result[0].likeAnimeImg));
         });
         getFriends(userId).then((result) => {
-            setFriends(result);
-            setTotalFriend(result.length)
-        })
+            console.log("friend:", result)
+            setFriendInfo(result);
+        });
         getUserComments(userId).then((result) => {
             console.log(result);
             setTotal(result.length)
             setComments(result);
+        })
+        getFavGenre(userId).then((result) => {
+            console.log(result);
+            setFavGenre(setupFavGenre(result))
         })
     },
         [])
@@ -132,12 +124,26 @@ export default function Profile() {
         <div className="body">
             <Logo />
             <div className="username">
-                {username}
+                Login As: {username}
+            </div>
+            <div className="homepage" onClick={() => { window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`) }}>
+                My Home Page
+            </div>
+            <div className="logout" onClick={logout}>
+                Logout
             </div>
             <div className="profile">
                 <div className="profileAvatar">
                     <img src={avatar} />
                     <div className="profileName">{info.nickname}</div>
+                </div>
+                <div className="profileInfo">
+                    <div className="typeText">Favorite Anime Genre</div>
+                    <div className="profileList">
+                        {(favGenre != null && favGenre.map((one, index) => (
+                            <p key={index} style={{ fontSize: '20px' }}>{one}&nbsp;</p>
+                        )))}
+                    </div>
                 </div>
                 <div className="profileInfo">
                     <div className="typeText">Recently Liked</div>
@@ -147,45 +153,17 @@ export default function Profile() {
                         )))}
                     </div>
                 </div>
-
                 <div className="profileInfo">
                     <div className="typeText">Friends Recommendation</div>
-                    <div className="friendList">
-                        {(friends != null && friends.slice((pageFriend - 1) * pagesizeFriend, pageFriend * pagesizeFriend).map((one) => (
-                            <FriendDisplayed userImg={checkGender(one.gender)} id={one.nickname} degree={one.n} />
+                    <div className="profileList">
+                        {(friendInfo != null && friendInfo.map((one) => (
+                            <FriendDisplayed name={one.nickname} distance={one.n} />
                         )))}
                     </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", paddingBottom: "20px" }}>
-                    <Pagination
-                        total={totalFriend}
-                        showSizeChanger
-                        showTotal={totalFriend => `Total ${totalFriend} friends`}
-                        onChange={(pageFriend, pagesizeFriend) => {
-                            setPageFriend(pageFriend);
-                            setPagesizeFriend(pagesizeFriend);
-                        }}
-                        pageSizeOptions={[1, 3, 5, 10]}
-                        defaultPageSize={3}
-                    />
-                </div>
-
-                {/* <div className="profileInfo">
-                    <div className="typeText">Friends Recommendation</div>
-                    {(friends != null && friends.map((one) => (
-                        <div className="friendList" onClick={() => { redirectToFriend(one.ID) }}>
-                            <div>
-                                <div>Nickname: {one.nickname}</div>
-                                <div>Frienship Degree: {one.n}</div>
-                            </div>
-                        </div>
-                    )))}
-                </div> */}
-
-
 
                 <div className="profileInfo">
-                    <div className="typeText">Recently Commented</div>
+                    <div className="typeText">Recent Commented</div>
                     {(comments != null && comments.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <div className="commentHistoryUnit" onClick={() => { redirectToAnime(one.animeId) }}>
                             <div>
