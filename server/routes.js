@@ -656,6 +656,44 @@ async function make_comments(req, res){
         }
         })
 }
+
+async function get_avg_score(req, res){
+    const animeId = req.query.animeId
+    let query = `WITH
+    COMPLETE_WATCH_ANIME AS (
+        SELECT W.animeID, W.userId
+        FROM Watched W
+        WHERE W.status = 'Completed'
+    ),
+     REVIEW_ANIME AS (
+         SELECT A2.animeId, ROUND(AVG(RB.rating), 2) AS avg_audience_score
+         FROM Anime A2 JOIN ReviewedBy RB on A2.animeId = RB.animeId
+                       JOIN RegisteredUser R on RB.userId = R.userId
+         WHERE R.userId IN (SELECT distinct userId
+                            FROM Watched)
+         AND A2.animeId=${animeId}
+     ),
+     COMPLETE_REVIEW_ANIME AS (
+         SELECT A2.animeId, ROUND(AVG(RB.rating), 2) AS avg_complete_audience_score
+         FROM Anime A2 JOIN ReviewedBy RB on A2.animeId = RB.animeId
+                       JOIN RegisteredUser R on RB.userId = R.userId
+         WHERE R.userId IN (SELECT distinct userId
+                            FROM COMPLETE_WATCH_ANIME)
+         AND A2.animeId=${animeId}
+     )
+    SELECT A.animeId, A.title, A.score, RA.avg_audience_score, CA.avg_complete_audience_score
+    FROM REVIEW_ANIME RA, COMPLETE_REVIEW_ANIME CA, Anime A
+    WHERE A.animeId = RA.animeId AND RA.animeId = CA.animeID;`
+
+    connection.query(query,
+        function(error, result, fields){
+        if (error){
+            res.json({error: error})
+        } else {
+            res.json({result: result})
+        }
+        })
+}
 module.exports = {
     homePage,
     loginPage,
@@ -680,4 +718,5 @@ module.exports = {
     friend_recommendation,
     user_favourite_genre,
     make_comments,
+    get_avg_score,
 }
