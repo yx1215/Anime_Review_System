@@ -65,15 +65,22 @@ async function loginHandler(req, res) {
         const query = `SELECT userId, password FROM RegisteredUser
         WHERE nickname='${username}'`
         connection.query(query,
-            function (error, results, fields) {
+            async function (error, results, fields) {
                 if (error) res.send(error);
                 else {
                     if (results.length > 0) {
-                        req.session.login = true;
-                        req.session.userId = results[0].userId;
-                        res.send("log in successfully!");
+                        const pwdHash = results[0].password
+                        const validPassword = await bcrypt.compare(password, pwdHash);
+                        if (validPassword){
+                            req.session.login = true;
+                            req.session.userId = results[0].userId;
+                            res.json({message: "log in successfully!", results: results});
+                        } else {
+                            res.json({message: "Invalid password for username: " + username});
+                        }
+
                     } else {
-                        res.send("Invalid credential.");
+                        res.json({message: `Username ${username} does not exist.`});
                     }
                 }
             })
@@ -97,12 +104,14 @@ async function registerHandler(req, res) {
 
     const username = req.body.username
     const password = req.body.password
+    const salt = await bcrypt.genSalt(10);
+    const pwdHash = await bcrypt.hash(password, salt);
     console.log("username: " + username);
     if (username && password) {
         const checkExistQuery = `SELECT userId, password FROM RegisteredUser
                                  WHERE nickname='${username}'`
         const insertQuery1 = `insert into User (userId) values ((select max(userid) + 1 from RegisteredUser));`
-        const insertQuery2 = `insert into RegisteredUser (userId, password, nickname) values ((select max(userId) from User), 'password', '${username}');`
+        const insertQuery2 = `insert into RegisteredUser (userId, password, nickname) values ((select max(userId) from User), '${pwdHash}', '${username}');`
         connection.query(checkExistQuery,
             function (error, results, fields) {
                 if (error) res.send(error);
@@ -569,9 +578,9 @@ async function friend_recommendation(req, res) {
    TWO_CONNECT AS (
        SELECT DISTINCT OC1.ID1 AS ID1, OC2.ID2 AS ID2
        FROM ONE_CONNECT OC1 JOIN ONE_CONNECT_TOTAL OC2 ON OC1.ID2=OC2.ID1
-       WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 5
+       WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 3
    )
-    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 5)
+    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 3)
     UNION
     (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
     `
@@ -619,7 +628,72 @@ async function user_favourite_genre(req, res){
         })
 }
 
+async function make_comments(req, res){
+    const userId = req.query.userId;
+    const animeId = req.query.animeId;
+    const comment = req.query.comment;
+    const rating = req.query.rating;
+    connection.query(`
+    SELECT * FROM ReviewedBy WHERE userId=? AND animeId=?;`, [userId, animeId]
+        ,
+        function(error, results, fields){
+        if (error){
+            console.log(error)
+            res.json({message: error})
+        } else {
+            if (results.length > 0){
+                res.json({message: `You have commented Anime with Id ${animeId}`})
+            } else {
+                connection.query(`INSERT INTO ReviewedBy VALUE (?, ?, ?, ?);`, [userId, animeId, comment, rating],
+                    function (error, results, fields) {
+                        if (error){
+                            res.json({message: error})
+                        } else {
+                            res.json({message: "Comment Successful."})
+                        }
+                    })
+            }
+        }
+        })
+}
 
+async function get_avg_score(req, res){
+    const animeId = req.query.animeId
+    let query = `WITH
+    COMPLETE_WATCH_ANIME AS (
+        SELECT W.animeID, W.userId
+        FROM Watched W
+        WHERE W.status = 'Completed'
+    ),
+     REVIEW_ANIME AS (
+         SELECT A2.animeId, ROUND(AVG(RB.rating), 2) AS avg_audience_score
+         FROM Anime A2 JOIN ReviewedBy RB on A2.animeId = RB.animeId
+                       JOIN RegisteredUser R on RB.userId = R.userId
+         WHERE R.userId IN (SELECT distinct userId
+                            FROM Watched)
+         AND A2.animeId=${animeId}
+     ),
+     COMPLETE_REVIEW_ANIME AS (
+         SELECT A2.animeId, ROUND(AVG(RB.rating), 2) AS avg_complete_audience_score
+         FROM Anime A2 JOIN ReviewedBy RB on A2.animeId = RB.animeId
+                       JOIN RegisteredUser R on RB.userId = R.userId
+         WHERE R.userId IN (SELECT distinct userId
+                            FROM COMPLETE_WATCH_ANIME)
+         AND A2.animeId=${animeId}
+     )
+    SELECT A.animeId, A.title, A.score, RA.avg_audience_score, CA.avg_complete_audience_score
+    FROM REVIEW_ANIME RA, COMPLETE_REVIEW_ANIME CA, Anime A
+    WHERE A.animeId = RA.animeId AND RA.animeId = CA.animeID;`
+
+    connection.query(query,
+        function(error, result, fields){
+        if (error){
+            res.json({error: error})
+        } else {
+            res.json({result: result})
+        }
+        })
+}
 module.exports = {
     homePage,
     loginPage,
@@ -642,5 +716,7 @@ module.exports = {
     animations_sort_aired,
     animations_sort_most_viewed,
     friend_recommendation,
-    user_favourite_genre
+    user_favourite_genre,
+    make_comments,
+    get_avg_score,
 }
