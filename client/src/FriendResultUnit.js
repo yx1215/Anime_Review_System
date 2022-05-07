@@ -4,12 +4,14 @@ import female from "./image/woman.jpeg";
 import male from "./image/male.jpeg";
 import unknown from "./image/unknown.jpeg";
 
-function getDetails() {
-    window.location.replace(`/profile?userId=${friend.ID}`);
-}
 let friend;
 let avatar;
+
+
 export default function FriendResultUnit({ friendObj }) {
+    function getDetails() {
+        window.location.replace(`/profile?userId=${friendObj.ID}`);
+    }
     useEffect(() => {
         friend = friendObj;
     })
