@@ -1,14 +1,16 @@
-.searchGroup{
+.searchGroup {
     display: flex;
     flex-direction: column;
     width: 80%;
     margin-top: 100px;
     margin-left: 50px;
 }
-.searchBarSmall{
+
+.searchBarSmall {
     display: flex;
 }
-.username{
+
+.username {
     position: absolute;
     left: 92%;
     top: 18%;
@@ -17,7 +19,8 @@
     font-style: normal;
     font-weight: 400;
 }
-.inputSmall{
+
+.inputSmall {
     width: 400px;
     height: 40px;
     background: #EEF2F1;
@@ -26,7 +29,7 @@
     font-size: 20px;
 }
 
-.searchButtonSmall{
+.searchButtonSmall {
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: 400;
@@ -38,13 +41,13 @@
     border-width: 0;
 }
 
-.searchFilter{
+.searchFilter {
     display: flex;
     flex-direction: row;
     margin-top: 10px;
 }
 
-#genre{
+#genre {
     border-width: 0;
     background: #D8E7E5;
     font-family: 'Cormorant Regular';
@@ -53,7 +56,8 @@
     font-size: 24px;
     line-height: 29px;
 }
-.searchResult{
+
+.searchResult {
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -63,7 +67,8 @@
     margin-left: 30px;
     margin-right: 30px;
 }
-.resultUnit{
+
+.resultUnit {
     align-items: stretch;
     display: flex;
     flex-direction: row;
@@ -74,14 +79,21 @@
     background: #F5FFFE;
 }
 
-.resultImg img{
+.resultImg img {
     height: 158px;
     width: 158px;
     margin-right: 70px;
 }
 
-.resultInfo{
+.resultInfo {
     position: relative;
     top: -10px;
 }
 
+.filter_button:hover {
+    cursor: pointer;
+}
+
+.searchButtonSmall:hover {
+    cursor: pointer;
+}

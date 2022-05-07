@@ -11,7 +11,7 @@ export default function Search() {
     // async function helper(){
     //     return await axios.get(`${link}/`).catch((err) => { console.log(err); });
     // }
-    if(!window.sessionStorage.getItem('username')){
+    if (!window.sessionStorage.getItem('username')) {
         window.location.replace("/login");
     }
     username = window.sessionStorage.getItem('username');
@@ -60,7 +60,6 @@ export default function Search() {
             <div className="username">
                 {username}
             </div>
-
             <div className="title">
                 AniME
             </div>
