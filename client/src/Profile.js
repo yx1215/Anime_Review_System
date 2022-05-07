@@ -35,6 +35,12 @@ async function getFriends(id){
     return info.data.results;
 }
 
+async function getFavGenre(id){
+    const info = await axios.get(`${link}/user/fav_genres?userId=${id}`).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
 function logout(){
     window.sessionStorage.clear();
     window.location.replace(`/login`)
@@ -57,6 +63,15 @@ function setupAnimes(nameList, imgList){
 function redirectToAnime(animeId){
     window.location.replace(`/game?id=${animeId}`);
 }
+
+function setupFavGenre(results){
+    let genres = []
+    for (let i=0; i < results.length; i++){
+        genres.push(results[i].genreName)
+    }
+    return genres;
+}
+
 export default function Profile() {
     let search = window.location.search;
     let params = new URLSearchParams(search);
@@ -65,6 +80,7 @@ export default function Profile() {
     const [animeInfo, setAnimeInfo] = useState([]);
     const [friendInfo, setFriendInfo] = useState([]);
     const [comments, setComments] = useState([]);
+    const [favGenre, setFavGenre] = useState([]);
 
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
@@ -96,6 +112,10 @@ export default function Profile() {
             setTotal(result.length)
             setComments(result);
         })
+        getFavGenre(userId).then((result) => {
+            console.log(result);
+            setFavGenre(setupFavGenre(result))
+        })
     },
         [])
     console.log(info);
@@ -116,6 +136,14 @@ export default function Profile() {
                 <div className="profileAvatar">
                    <img src={avatar} />
                     <div className="profileName">{info.nickname}</div>
+                </div>
+                <div className="profileInfo">
+                    <div className="typeText">Favourite Anime Genre</div>
+                    <div className="profileList">
+                        {(favGenre != null && favGenre.map((one, index) => (
+                            <p key={index} style={{fontSize: '20px'}}>{one}&nbsp;</p>
+                        )))}
+                    </div>
                 </div>
                 <div className="profileInfo">
                     <div className="typeText">Recent Liked</div>
