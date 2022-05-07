@@ -6,6 +6,7 @@ import avatar from './image/woman.jpeg';
 import anime from './image/anime.jpeg';
 import Rating from 'react-star-rating-lite';
 import {Pagination} from "antd";
+import 'antd/dist/antd.min.css'
 
 let animeId = null;
 let username;

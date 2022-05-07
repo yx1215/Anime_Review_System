@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
-import anime from "./image/anime.jpeg";
-import female from "./image/woman.jpeg";
-import male from "./image/male.jpeg";
-import unknown from "./image/unknown.jpeg";
 
-function getDetails() {
-    window.location.replace(`/profile?userId=${friend.ID}`);
-}
+
 let friend;
 let avatar;
 export default function FriendResultUnit({ friendObj }) {
+    function getDetails() {
+        window.location.replace(`/profile?userId=${friend.ID}`);
+    }
     useEffect(() => {
         friend = friendObj;
     })
