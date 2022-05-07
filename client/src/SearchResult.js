@@ -9,7 +9,7 @@ import ResultUnit from "./resultUnit";
 import UserResultUnit from "./UserResultUnit";
 import FriendResultUnit from "./FriendResultUnit";
 import { Pagination } from 'antd';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css'
 
 
 const link = 'http://localhost:8080';

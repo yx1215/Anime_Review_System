@@ -10,7 +10,7 @@ import FriendDisplayed from "./FriendDisplayedUnit";
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 import { Pagination } from 'antd';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css'
 
 let userId;
 let avatar;
