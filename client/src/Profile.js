@@ -6,6 +6,7 @@ import male from "./image/male.jpeg";
 import unknown from "./image/unknown.jpeg";
 import anime from './image/anime.jpeg';
 import AnimeDisplayed from "./AnimeDisplayedUnit";
+import FriendDisplayed from "./FriendRecommendUnit";
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 import { Pagination } from 'antd';
@@ -26,6 +27,17 @@ async function getUserComments(id){
     const info = await axios.get(`${link}/comments/user?userId=${id}`).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
+}
+
+async function getFriends(id){
+    const info = await axios.get(`${link}/recommend_friends?userId=${id}`).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data.results;
+}
+
+function logout(){
+    window.sessionStorage.clear();
+    window.location.replace(`/login`)
 }
 
 function setupAnimes(nameList, imgList){
@@ -51,6 +63,7 @@ export default function Profile() {
     userId = params.get('userId');
     const [info, setInfo] = useState({});
     const [animeInfo, setAnimeInfo] = useState([]);
+    const [friendInfo, setFriendInfo] = useState([]);
     const [comments, setComments] = useState([]);
 
     const [total, setTotal] = useState(0);
@@ -74,6 +87,10 @@ export default function Profile() {
             }
             setAnimeInfo(setupAnimes(result[0].likeAnime, result[0].likeAnimeImg));
         });
+        getFriends(userId).then((result) => {
+            console.log("friend:", result)
+            setFriendInfo(result);
+        });
         getUserComments(userId).then((result) => {
             console.log(result);
             setTotal(result.length)
@@ -87,7 +104,13 @@ export default function Profile() {
         <div className="body">
             <Logo />
             <div className="username">
-                {username}
+                Login As: {username}
+            </div>
+            <div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>
+                My Home Page
+            </div>
+            <div className="logout" onClick={logout}>
+                Logout
             </div>
             <div className="profile">
                 <div className="profileAvatar">
@@ -100,11 +123,15 @@ export default function Profile() {
                         {(animeInfo != null && animeInfo.map((one) => (
                             <AnimeDisplayed animeImg={one.img} name={one.name} />
                         )))}
-                        {/*{(info!=={}&&[...Array(3)].map((x, i) =>*/}
-                        {/*    <AnimeDisplayed animeImg={anime} name={info.likeAnime[i]} />*/}
-                        {/*))}*/}
                     </div>
-
+                </div>
+                <div className="profileInfo">
+                    <div className="typeText">Friend Recommend</div>
+                    <div className="profileList">
+                        {(friendInfo != null && friendInfo.map((one) => (
+                            <FriendDisplayed name={one.nickname} distance={one.n} />
+                        )))}
+                    </div>
                 </div>
 
                 <div className="profileInfo">

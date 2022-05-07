@@ -71,9 +71,9 @@ async function loginHandler(req, res) {
                     if (results.length > 0) {
                         req.session.login = true;
                         req.session.userId = results[0].userId;
-                        res.send("log in successfully!");
+                        res.json({message: "log in successfully!", results: results});
                     } else {
-                        res.send("Invalid credential.");
+                        res.json({message: "Invalid credential."});
                     }
                 }
             })
@@ -569,9 +569,9 @@ async function friend_recommendation(req, res) {
    TWO_CONNECT AS (
        SELECT DISTINCT OC1.ID1 AS ID1, OC2.ID2 AS ID2
        FROM ONE_CONNECT OC1 JOIN ONE_CONNECT_TOTAL OC2 ON OC1.ID2=OC2.ID1
-       WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 5
+       WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 3
    )
-    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 5)
+    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 3)
     UNION
     (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
     `
@@ -619,7 +619,34 @@ async function user_favourite_genre(req, res){
         })
 }
 
-
+async function make_comments(req, res){
+    const userId = req.query.userId;
+    const animeId = req.query.animeId;
+    const comment = req.query.comment;
+    const rating = req.query.rating;
+    connection.query(`
+    SELECT * FROM ReviewedBy WHERE userId=? AND animeId=?;`, [userId, animeId]
+        ,
+        function(error, results, fields){
+        if (error){
+            console.log(error)
+            res.json({message: error})
+        } else {
+            if (results.length > 0){
+                res.json({message: `You have commented Anime with Id ${animeId}`})
+            } else {
+                connection.query(`INSERT INTO ReviewedBy VALUE (?, ?, ?, ?);`, [userId, animeId, comment, rating],
+                    function (error, results, fields) {
+                        if (error){
+                            res.json({message: error})
+                        } else {
+                            res.json({message: "Comment Successful."})
+                        }
+                    })
+            }
+        }
+        })
+}
 module.exports = {
     homePage,
     loginPage,
@@ -642,5 +669,6 @@ module.exports = {
     animations_sort_aired,
     animations_sort_most_viewed,
     friend_recommendation,
-    user_favourite_genre
+    user_favourite_genre,
+    make_comments,
 }

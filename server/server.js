@@ -54,6 +54,8 @@ app.get('/comments/user', routes.find_comments_for_user);
 
 app.get('/comments/anime', routes.find_comments_for_anime);
 
+app.post("/comments/anime", routes.make_comments);
+
 app.get('/search/animations', routes.search_animations);
 
 app.get('/all_users', routes.all_user);
