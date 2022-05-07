@@ -305,7 +305,6 @@ export default function SearchResult() {
                                     <option value="Action">Action</option>
                                     <option value="Comedy">Comedy</option>
                                 </select>
-                                {/*<input type="submit" value="Submit" />*/}
                             </form>
                         </div>
                         <div className="classifier">

@@ -165,7 +165,7 @@ export default function Profile() {
                             setPageFriend(pageFriend);
                             setPagesizeFriend(pagesizeFriend);
                         }}
-                        pageSizeOptions={[3, 5, 10]}
+                        pageSizeOptions={[1, 3, 5, 10]}
                         defaultPageSize={3}
                     />
                 </div>
