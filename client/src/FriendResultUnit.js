@@ -5,7 +5,7 @@ let friend;
 let avatar;
 export default function FriendResultUnit({ friendObj }) {
     function getDetails() {
-        window.location.replace(`/profile?userId=${friend.ID}`);
+        window.location.replace(`/profile?userId=${friendObj.ID}`);
     }
     useEffect(() => {
         friend = friendObj;
