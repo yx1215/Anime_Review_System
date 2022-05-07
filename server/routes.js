@@ -65,15 +65,22 @@ async function loginHandler(req, res) {
         const query = `SELECT userId, password FROM RegisteredUser
         WHERE nickname='${username}'`
         connection.query(query,
-            function (error, results, fields) {
+            async function (error, results, fields) {
                 if (error) res.send(error);
                 else {
                     if (results.length > 0) {
-                        req.session.login = true;
-                        req.session.userId = results[0].userId;
-                        res.json({message: "log in successfully!", results: results});
+                        const pwdHash = results[0].password
+                        const validPassword = await bcrypt.compare(password, pwdHash);
+                        if (validPassword){
+                            req.session.login = true;
+                            req.session.userId = results[0].userId;
+                            res.json({message: "log in successfully!", results: results});
+                        } else {
+                            res.json({message: "Invalid password for username: " + username});
+                        }
+
                     } else {
-                        res.json({message: "Invalid credential."});
+                        res.json({message: `Username ${username} does not exist.`});
                     }
                 }
             })
@@ -97,12 +104,14 @@ async function registerHandler(req, res) {
 
     const username = req.body.username
     const password = req.body.password
+    const salt = await bcrypt.genSalt(10);
+    const pwdHash = await bcrypt.hash(password, salt);
     console.log("username: " + username);
     if (username && password) {
         const checkExistQuery = `SELECT userId, password FROM RegisteredUser
                                  WHERE nickname='${username}'`
         const insertQuery1 = `insert into User (userId) values ((select max(userid) + 1 from RegisteredUser));`
-        const insertQuery2 = `insert into RegisteredUser (userId, password, nickname) values ((select max(userId) from User), 'password', '${username}');`
+        const insertQuery2 = `insert into RegisteredUser (userId, password, nickname) values ((select max(userId) from User), '${pwdHash}', '${username}');`
         connection.query(checkExistQuery,
             function (error, results, fields) {
                 if (error) res.send(error);
