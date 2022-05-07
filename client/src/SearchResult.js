@@ -8,6 +8,8 @@ import axios from "axios";
 import ResultUnit from "./resultUnit";
 import UserResultUnit from "./UserResultUnit";
 import FriendResultUnit from "./FriendResultUnit";
+import { Pagination } from 'antd';
+import 'antd/dist/antd.css';
 
 
 const link = 'http://localhost:8080';
@@ -127,7 +129,12 @@ export default function SearchResult() {
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
     const [searchUrl, setSearchUrl] = useState("");
-    if (!window.sessionStorage.getItem('username')) {
+
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pagesize, setPagesize] = useState(10);
+
+    if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }
 
@@ -136,21 +143,25 @@ export default function SearchResult() {
         if (user != null) {
             getUsers().then((result) => {
                 setUsers(result);
-                setInput("User=" + user + ";");
+                setTotal(result.length);
+                setInput("User="+user+";");
             })
         } else if (animeNew === '1') {
             getGameBasedOnTime().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 setInput("New=1;");
             })
         } else if (animeScore === "1") {
             getGameBasedOnScore().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 setInput("Score;");
             })
         } else if (animePopularity === "1") {
             getGameBasedOnPopularity().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 setInput("Popularity=1;");
             })
             // } else if (recommendation === "1") {
@@ -161,11 +172,13 @@ export default function SearchResult() {
         } else if (friend != null) {
             getFriends().then((result) => {
                 setFriends(result);
+                setTotal(result.length)
                 setInput("Friendof=" + friend + ";");
             })
         } else {
             getGame().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 if (animeTitle) {
                     setInput("Title=" + animeTitle + ";");
                     // filter.Title=animeTitle;
@@ -297,18 +310,32 @@ export default function SearchResult() {
                         </div>
                     </div>
                 </div>
-                <div className="searchResult">
-                    {(game != null && game.map((one) => (
-                        <ResultUnit gameObj={one} />
+
+                <div className="searchResult" >
+                    {(game != null && game.slice((page - 1) * pagesize, page * pagesize).map((one) => (
+                        <ResultUnit gameObj={one}/>
+                        )))}
+                    {(users != null && users.slice((page - 1) * pagesize, page * pagesize).map((one) => (
+                        <UserResultUnit userObj={one}/>
                     )))}
-                    {(users != null && users.map((one) => (
-                        <UserResultUnit userObj={one} />
-                    )))}
-                    {(friends != null && friends.map((one) => (
+                    {(friends != null && friends.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <FriendResultUnit friendObj={one} />
                     )))}
+                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
+                        <Pagination
+                        total={total}
+                        showSizeChanger
+                        showTotal={total => `Total ${total} items`}
+                        onChange={(page, pagesize) => {
+                            setPage(page);
+                            setPagesize(pagesize);
+                        }}
+                      />
+                    </div>
                 </div>
+
             </div>
+
             <div className="username">
                 {username}
             </div>
