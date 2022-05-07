@@ -424,8 +424,8 @@ async function animations_sort_most_viewed(req, res) {
 
 async function animations_sort_producer_aired(req, res) {
     const producer = req.query.Producer ? req.query.Producer : ''
-        connection.query(
-            `
+    connection.query(
+        `
             SELECT A2.animeId, A2.title, A2.age_rate, 
                    STR_TO_DATE(REPLACE(SUBSTRING(REPLACE(A2.aired, '  ', ' '), 1, 12), ' ', ''), '%b%d,%Y') AS aired, 
                    A2.type, A2.score, A2.img_url, AG.genres AS genre, AP.producers AS producer
@@ -443,17 +443,17 @@ async function animations_sort_producer_aired(req, res) {
                   AP.producers LIKE '%${producer}%'
             ORDER BY aired DESC, A2.title
             `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else {
+            if (results) {
+                res.json({ results: results })
             } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
+                res.json({ results: [] })
             }
-        })
+        }
+    })
 }
 
 // ********************************************
@@ -571,9 +571,9 @@ async function friend_recommendation(req, res) {
        FROM ONE_CONNECT OC1 JOIN ONE_CONNECT_TOTAL OC2 ON OC1.ID2=OC2.ID1
        WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 5
    )
-    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 5)
+    (SELECT RegisteredUser.nickname AS nickname, RegisteredUser.gender AS gender, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 5)
     UNION
-    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
+    (SELECT RegisteredUser.nickname AS nickname, RegisteredUser.gender AS gender, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
     `
     connection.query(query,
         function (error, results, fields) {
@@ -586,7 +586,7 @@ async function friend_recommendation(req, res) {
         })
 }
 
-async function user_favourite_genre(req, res){
+async function user_favourite_genre(req, res) {
     const userId = req.query.userId
 
     let query = `
@@ -609,13 +609,13 @@ async function user_favourite_genre(req, res){
     WHERE FG.num_genres > 1 AND FG.rank_genres <= 2 AND FG.userId=${userId};`
 
     connection.query(query,
-        function(error, results, fields){
-        if (error){
-            console.log(error)
-            res.json({error: error})
-        } else {
-            res.json({results: results})
-        }
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                res.json({ results: results })
+            }
         })
 }
 

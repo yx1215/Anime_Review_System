@@ -89,3 +89,11 @@
     position: relative;
     top: -10px;
 }
+
+.filter_button:hover {
+    cursor: pointer;
+}
+
+.searchButtonSmall:hover {
+    cursor: pointer;
+}

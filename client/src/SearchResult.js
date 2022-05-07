@@ -134,7 +134,7 @@ export default function SearchResult() {
     const [page, setPage] = useState(1);
     const [pagesize, setPagesize] = useState(10);
 
-    if(!window.sessionStorage.getItem('username')){
+    if (!window.sessionStorage.getItem('username')) {
         window.location.replace("/login");
     }
 
@@ -144,7 +144,7 @@ export default function SearchResult() {
             getUsers().then((result) => {
                 setUsers(result);
                 setTotal(result.length);
-                setInput("User="+user+";");
+                setInput("User=" + user + ";");
             })
         } else if (animeNew === '1') {
             getGameBasedOnTime().then((result) => {
@@ -277,6 +277,9 @@ export default function SearchResult() {
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
+                        <div className="classifier">
+                            <div className="classfilter">User Oriented:</div>
+                        </div>
                         <div className="filter_button" onClick={findByPopularity}>
                             <div className="filter">Most Viewed</div>
                         </div>
@@ -285,9 +288,6 @@ export default function SearchResult() {
                         </div>
                         <div className="filter_button" onClick={findByTime}>
                             <div className="filter">New</div>
-                        </div>
-                        <div className="filter_button" onClick={findFriends}>
-                            <div className="filter">Friends</div>
                         </div>
                         <div className="filter_button" onClick={findUser}>
                             <div className="filter">User</div>
@@ -308,29 +308,35 @@ export default function SearchResult() {
                                 {/*<input type="submit" value="Submit" />*/}
                             </form>
                         </div>
+                        <div className="classifier">
+                            <div className="classfilter">Community:</div>
+                        </div>
+                        <div className="filter_button" onClick={findFriends}>
+                            <div className="filter">Friends</div>
+                        </div>
                     </div>
                 </div>
 
                 <div className="searchResult" >
                     {(game != null && game.slice((page - 1) * pagesize, page * pagesize).map((one) => (
-                        <ResultUnit gameObj={one}/>
-                        )))}
+                        <ResultUnit gameObj={one} />
+                    )))}
                     {(users != null && users.slice((page - 1) * pagesize, page * pagesize).map((one) => (
-                        <UserResultUnit userObj={one}/>
+                        <UserResultUnit userObj={one} />
                     )))}
                     {(friends != null && friends.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <FriendResultUnit friendObj={one} />
                     )))}
-                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", paddingBottom: "20px" }}>
                         <Pagination
-                        total={total}
-                        showSizeChanger
-                        showTotal={total => `Total ${total} items`}
-                        onChange={(page, pagesize) => {
-                            setPage(page);
-                            setPagesize(pagesize);
-                        }}
-                      />
+                            total={total}
+                            showSizeChanger
+                            showTotal={total => `Total ${total} items`}
+                            onChange={(page, pagesize) => {
+                                setPage(page);
+                                setPagesize(pagesize);
+                            }}
+                        />
                     </div>
                 </div>
 
