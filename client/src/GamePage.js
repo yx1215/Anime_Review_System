@@ -93,14 +93,14 @@ export default function GamePage(){
         <div className="backgroundForGamePage">
             <Logo />
             <div className="username">
-                Login As: {username}
+                Hello! {username}
             </div>
             {/*<div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>*/}
             {/*    My Home Page*/}
             {/*</div>*/}
-            {/*<div className="logout" onClick={logout}>*/}
-            {/*    Logout*/}
-            {/*</div>*/}
+            <div className="logout" onClick={logout}>
+                Logout
+            </div>
             <div className="gameInformation">
                 <div className="gameName">{info.title}</div>
                 <div className="gameDetails">
@@ -149,17 +149,17 @@ export default function GamePage(){
                         defaultPageSize={3}
                       />
                     </div>
-                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
-                        <TextArea rows={4} onChange={(event => {setNewComment(event.target.value)})}/>
-                    </div>
-                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
-                        <Rate allowHalf defaultValue={4} onChange={(value => {setNewRate(value * 2)})}/>
-                    </div>
-                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
-                        <Button type="primary" onClick={handleCommentSubmit}>
-                            Comment
-                        </Button>
-                    </div>
+                    {/*<div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>*/}
+                    {/*    <TextArea rows={4} onChange={(event => {setNewComment(event.target.value)})}/>*/}
+                    {/*</div>*/}
+                    {/*<div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>*/}
+                    {/*    <Rate allowHalf defaultValue={4} onChange={(value => {setNewRate(value * 2)})}/>*/}
+                    {/*</div>*/}
+                    {/*<div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>*/}
+                    {/*    <Button type="primary" onClick={handleCommentSubmit}>*/}
+                    {/*        Comment*/}
+                    {/*    </Button>*/}
+                    {/*</div>*/}
 
                 </div>
             </div>

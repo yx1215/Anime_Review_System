@@ -16,9 +16,9 @@ export default function ResultUnit({gameObj}){
                 <img src={gameObj.img_url} />
             </div>
             <div className="resultInfo">
-                <h3>{gameObj.title}</h3>
+                <h3 style={{fontSize: '30px'}}>{gameObj.title}</h3>
+                <b style={{fontSize: '20px'}}>Score: {gameObj.score}</b>
                 <p>Aired: {gameObj.aired}</p>       <p>Producer: {gameObj.producer}</p>
-                <p>Score: {gameObj.score}</p>
                 {gameObj.synopsis}
             </div>
         </div>
