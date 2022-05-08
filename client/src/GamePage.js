@@ -39,7 +39,7 @@ export default function GamePage() {
     animeId = params.get('id');
     const [info, setInfo] = useState({});
     const [comments, setComments] = useState([]);
-    const [score, setScores] = useState([]);
+    const [score, setScore] = useState([]);
 
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);

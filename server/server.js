@@ -54,6 +54,8 @@ app.get('/comments/user', routes.find_comments_for_user);
 
 app.get('/comments/anime', routes.find_comments_for_anime);
 
+app.post("/comments/anime", routes.make_comments);
+
 app.get('/search/animations', routes.search_animations);
 
 app.get('/all_users', routes.all_user);
@@ -70,6 +72,7 @@ app.get("/recommend_friends", routes.friend_recommendation);
 
 app.get("/user/fav_genres", routes.user_favourite_genre);
 
+app.get("/anime/avg", routes.get_avg_score)
 app.listen(config.server_port, () => {
 	console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });
