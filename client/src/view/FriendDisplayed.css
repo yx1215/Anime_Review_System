@@ -1,0 +1,26 @@
+.friendDisplayed {
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.friendDisplayed img {
+    width: 176px;
+    height: 199px;
+    align-self: center;
+}
+
+.friendNameDisplayed {
+    text-align: center;
+    margin-top: 10px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.friendDegreeDisplayed {
+    text-align: center;
+    margin-top: 0px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+}
