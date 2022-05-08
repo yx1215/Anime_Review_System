@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './view/SearchResult.css';
 import Logo from './Logo';
-import avatar from './image/woman.jpeg';
-import anime from './image/anime.jpeg';
-import FilterButton from './FilterButton';
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 import UserResultUnit from "./UserResultUnit";
+import './view/FilterButton.css';
+import { Pagination } from 'antd';
+import 'antd/dist/antd.min.css'
 
 
 const link = 'http://localhost:8080';
@@ -18,67 +18,73 @@ let animeSynopsis;
 let animeNew;
 let animeScore;
 let animePopularity;
+let friend;
 let user;
 
-async function getGame(){
+function logout(){
+    window.sessionStorage.clear();
+    window.location.replace(`/login`)
+}
+
+async function getGame() {
     let url = `${link}/search/animations?`;
     let pool = [];
-    if (animeTitle){
+    if (animeTitle) {
         pool.push(`Title=${animeTitle}`);
     }
-    if(animeGenre){
+    if (animeGenre) {
         pool.push(`Genre=${animeGenre}`);
     }
-    if (animeProducer){
+    if (animeProducer) {
         pool.push(`Producer=${animeProducer}`);
     }
-    if (animeSynopsis){
+    if (animeSynopsis) {
         pool.push(`Synopsis=${animeSynopsis}`);
     }
     let stringy = pool.join("&");
-    url +=stringy;
+    url += stringy;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
-async function getUsers(){
-    let result=[];
-    if(parseInt(user)==="NaN"){
+async function getUsers() {
+    let result = [];
+    if (parseInt(user) === "NaN") {
         let url = `${link}/search/single_user?userId=${user}`;
         const info = await axios.get(url).catch((err) => { console.log(err); });
-        if(info.data.error||info.data.results.length===0){
+        if (info.data.error || info.data.results.length === 0) {
             console.log(info);
-        }else{
-            result=info.data.results;
+        } else {
+            result = info.data.results;
         }
     }
     let url2 = `${link}/search/users?nickname=${user}`;
     const info2 = await axios.get(url2).catch((err) => { console.log(err); });
-    if(info2.data.error||info2.data.results.length===0){
+    if (info2.data.error || info2.data.results.length === 0) {
         console.log(info2);
-    }else{
-        result=result.concat(info2.data.results);
+    } else {
+        result = result.concat(info2.data.results);
     }
     // result+=info2.data.results;
     return result;
 }
 
-async function getGameBasedOnTime(){
+async function getGameBasedOnTime() {
     let url = `${link}/animations/sort_aired`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
-async function getGameBasedOnScore(){
+async function getGameBasedOnScore() {
     let url = `${link}/animations/sort_score`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
 }
 
-async function getGameBasedOnPopularity(){
+async function getGameBasedOnPopularity() {
     let url = `${link}/animations/sort_most_viewed`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
@@ -86,7 +92,7 @@ async function getGameBasedOnPopularity(){
 }
 
 
-export default function SearchResult(){
+export default function SearchResult() {
     let search = window.location.search;
     let params = new URLSearchParams(search);
     animeTitle = params.get('Title');
@@ -97,41 +103,52 @@ export default function SearchResult(){
     animeScore = params.get('Score');
     animePopularity = params.get('Popularity');
     user = params.get('User');
+    friend = params.get('Friendof')
     const [game, setGame] = useState([]);
     const [users, setUsers] = useState([]);
     const [genre, setGenre] = useState(null);
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
     const [searchUrl, setSearchUrl] = useState("");
+
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
+    const [pagesize, setPagesize] = useState(10);
+
     if(!window.sessionStorage.getItem('username')){
         window.location.replace("/login");
     }
 
-    useEffect(()=>{
-        username=window.sessionStorage.getItem("username");
-        if(user!=null){
-            getUsers().then((result) =>{
+    useEffect(() => {
+        username = window.sessionStorage.getItem("username");
+        if (user != null) {
+            getUsers().then((result) => {
                 setUsers(result);
+                setTotal(result.length);
                 setInput("User="+user+";");
             })
-        } else if (animeNew==='1'){
+        } else if (animeNew === '1') {
             getGameBasedOnTime().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 setInput("New=1;");
             })
-        }else if(animeScore==="1"){
+        } else if (animeScore === "1") {
             getGameBasedOnScore().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 setInput("Score;");
             })
-        }else if(animePopularity==="1"){
-            getGameBasedOnPopularity().then((result) =>{
+        } else if (animePopularity === "1") {
+            getGameBasedOnPopularity().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 setInput("Popularity=1;");
             })
-        } else{
+        } else {
             getGame().then((result) => {
                 setGame(result);
+                setTotal(result.length);
                 if (animeTitle) {
                     setInput("Title=" + animeTitle + ";");
                     // filter.Title=animeTitle;
@@ -147,78 +164,81 @@ export default function SearchResult(){
 
             });
         }
-    },[])
+    }, [])
 
-    function handleGenre(e){
+    function handleGenre(e) {
         console.log(e.target.value);
         setGenre(e.target.value);
         // filter.Genre = e.target.value;
-        setInput(input+"Genre="+e.target.value+";");
+        setInput(input + "Genre=" + e.target.value + ";");
     }
 
-    function handleProducer(e){
+    function handleProducer(e) {
         setProducer(e.target.value);
         console.log(e.target.value);
         // filter.Producer = e.target.value;
-        setInput(input+"Producer="+e.target.value+";");
+        setInput(input + "Producer=" + e.target.value + ";");
     }
 
-    function findByTime(e){
+    function findByTime(e) {
         console.log(e.target.value);
         window.location.replace(`/searchResult?New=1`);
     }
 
-    function findByScore(e){
+    function findByScore(e) {
         console.log(e.target.value);
         window.location.replace(`/searchResult?Score=1`);
     }
 
-    function findByPopularity(e){
+    function findByPopularity(e) {
         console.log(e.target.value);
         window.location.replace(`/searchResult?Popularity=1`);
     }
 
-    function changeInput(e){
+    function changeInput(e) {
         setInput(e.target.value);
         console.log(input);
     }
 
-    function searchFunction(){
+    function searchFunction() {
         let temp;
-        if(input==="New=1;"){
+        if (input === "New=1;") {
             window.location.replace(`/searchResult?New=1`);
-        }else if(input==="Score=1;"){
+        } else if (input === "Score=1;") {
             window.location.replace(`/searchResult?Score=1`);
-        }else if(input==="Popularity=1;"){
+        } else if (input === "Popularity=1;") {
             window.location.replace(`/searchResult?Popularity=1`);
+            // } else if (input === "Recommendation=1;") {
+            //     window.location.replace(`/searchResult?Recommendation=1`);
         }
         var varibles = input.split(";");
-        for (var i = 0; i< varibles.length; i++){
-            if (varibles[i].length>0 && varibles[i].split("=").length===1){
+        for (var i = 0; i < varibles.length; i++) {
+            if (varibles[i].length > 0 && varibles[i].split("=").length === 1) {
                 temp = varibles[i];
-                varibles[i]="Title="+temp;
+                varibles[i] = "Title=" + temp;
             }
         }
         temp = varibles.join("&");
-        // if (temp.endsWith('&')){
-        //     temp = temp.substring(0, searchUrl.length-2);
-        // }
         console.log(temp);
         window.location.replace(`/searchResult?${temp}`);
     }
 
-    function findUser(){
+    function findUser() {
         setInput("User=");
     }
 
-    return(
+    function findFriends() {
+        setInput("Friendof=");
+    }
+
+    return (
         <div className="backgroundForGamePage">
-                <Logo />
+            <Logo />
 
             <div>
                 <div className="searchGroup">
                     <div className="searchBarSmall">
-                        <input className="inputSmall" value={input} onChange={changeInput}/>
+                        <input className="inputSmall" value={input} onChange={changeInput} />
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
@@ -231,14 +251,13 @@ export default function SearchResult(){
                         <div className="filter_button" onClick={findByTime}>
                             <div className="filter">New</div>
                         </div>
-                        {/*<FilterButton filterName="User"/>*/}
                         <div className="filter_button" onClick={findUser}>
                             <div className="filter">User</div>
                         </div>
                         <div className="filter_button">
                             <select name="genre" id="genre" onChange={handleProducer}>
-                                    <option value="Producer">Producer</option>
-                                    <option value="saab">Saab</option>
+                                <option value="Producer">Producer</option>
+                                <option value="saab">Saab</option>
                             </select>
                         </div>
                         <div className="filter_button">
@@ -253,17 +272,37 @@ export default function SearchResult(){
                         </div>
                     </div>
                 </div>
-                <div className="searchResult">
-                    {(game != null && game.map((one) => (
+
+                <div className="searchResult" >
+                    {(game != null && game.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <ResultUnit gameObj={one}/>
                         )))}
-                    {(users != null && users.map((one) => (
+                    {(users != null && users.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <UserResultUnit userObj={one}/>
                     )))}
+                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
+                        <Pagination
+                        total={total}
+                        showSizeChanger
+                        showTotal={total => `Total ${total} items`}
+                        onChange={(page, pagesize) => {
+                            setPage(page);
+                            setPagesize(pagesize);
+                        }}
+                      />
+                    </div>
                 </div>
+
             </div>
+
             <div className="username">
-                {username}
+                Login As: {username}
+            </div>
+            <div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>
+                My Home Page
+            </div>
+            <div className="logout" onClick={logout}>
+                Logout
             </div>
         </div>
 

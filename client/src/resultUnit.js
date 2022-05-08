@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
 import anime from "./image/anime.jpeg";
 
-function getDetails(){
-    window.location.replace(`/game?id=${game.animeId}`);
-}
+
 let game;
 export default function ResultUnit({gameObj}){
+    function getDetails(){
+    window.location.replace(`/game?id=${gameObj.animeId}`);
+}
     useEffect(()=>{
         game = gameObj;
     })

@@ -50,7 +50,11 @@ app.get('/animations/sort_most_viewed', routes.animations_sort_most_viewed)
 
 //app.get('/animations/producer_aired', routes.animations_sort_producer_aired)
 
-app.get('/comments', routes.comments);
+app.get('/comments/user', routes.find_comments_for_user);
+
+app.get('/comments/anime', routes.find_comments_for_anime);
+
+app.post("/comments/anime", routes.make_comments);
 
 app.get('/search/animations', routes.search_animations);
 
@@ -66,6 +70,11 @@ app.get("/logout", routes.logout);
 
 app.get("/recommend_friends", routes.friend_recommendation);
 
+app.get("/user/fav_genres", routes.user_favourite_genre);
+
+app.get("/user/percen_complete", routes.percentage_complete_like);
+
+app.get("/anime/avg", routes.get_avg_score)
 app.listen(config.server_port, () => {
 	console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });

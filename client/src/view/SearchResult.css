@@ -10,13 +10,33 @@
 }
 .username{
     position: absolute;
-    left: 92%;
-    top: 18%;
+    left: 80%;
+    top: 16%;
     font-size: 36px;
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: 400;
 }
+.homepage{
+    position: absolute;
+    left: 80%;
+    top: 26%;
+    font-size: 36px;
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+}
+
+.logout{
+    position: absolute;
+    left: 85%;
+    top: 36%;
+    font-size: 36px;
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+}
+
 .inputSmall{
     width: 400px;
     height: 40px;
@@ -85,3 +105,13 @@
     top: -10px;
 }
 
+/*.pagination {*/
+/*  display: inline-block;*/
+/*}*/
+
+/*.pagination a {*/
+/*  color: black;*/
+/*  float: right;*/
+/*  padding: 8px 16px;*/
+/*  text-decoration: none;*/
+/*}*/
