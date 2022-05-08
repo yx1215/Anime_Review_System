@@ -596,8 +596,7 @@ async function friend_recommendation(req, res) {
 }
 
 async function user_favourite_genre(req, res){
-    const userId = req.query.userId
-
+    const userId = req.query.userId;
     let query = `
     WITH TEMP_GENRE AS (
         SELECT R.userId, G.genreId, COUNT(G.genreId) AS num_genres
@@ -658,7 +657,7 @@ async function make_comments(req, res){
 }
 
 async function get_avg_score(req, res){
-    const animeId = req.query.animeId
+    const animeId = req.query.animeId;
     let query = `WITH
     COMPLETE_WATCH_ANIME AS (
         SELECT W.animeID, W.userId
@@ -694,6 +693,42 @@ async function get_avg_score(req, res){
         }
         })
 }
+
+async function percentage_complete_like(req, res){
+    const userId = req.query.userId;
+    console.log(userId)
+    if(userId){
+    let query = `WITH t1 as (
+        SELECT u.userId, w.animeId
+        FROM User u
+        JOIN Watched w on u.userId = w.userid
+        JOIN Anime a on w.animeID = a.animeId
+        WHERE status = 'Completed' AND w.userid=${userId}),
+        
+        t2 as (
+        SELECT l.userId, l.animeId
+        FROM likeAnime l
+        JOIN Anime a on a.animeId = l.animeId
+        WHERE l.userId=${userId}),
+        
+        t3 as (
+        SELECT t1.userId, if(t1.animeID in (SELECT t2.animeId from t2 where t1.userId = t2.userId), 1, 0) as likes_watched
+        FROM t1)
+        
+        SELECT userId, sum(likes_watched) AS total_watch, round(100 * (cast(sum(likes_watched) as float) / cast(count(userId) as float)), 2) as percentOfLikesWatched
+        FROM t3
+        GROUP BY userId;`
+
+    connection.query(query,
+        function(error, result, fields){
+        if (error){
+            res.json({error: error})
+        } else {
+            res.json({result: result})
+        }
+        })
+    }
+}
 module.exports = {
     homePage,
     loginPage,
@@ -719,4 +754,5 @@ module.exports = {
     user_favourite_genre,
     make_comments,
     get_avg_score,
+    percentage_complete_like
 }
