@@ -3,7 +3,7 @@ import './view/Search.css'
 
 let username;
 
-function logout(){
+function logout() {
     window.sessionStorage.clear();
     window.location.replace(`/login`)
 }
@@ -61,7 +61,7 @@ export default function Search() {
             <div className="username">
                 Login As: {username}
             </div>
-            <div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>
+            <div className="homepage" onClick={() => { window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`) }}>
                 My Home Page
             </div>
             <div className="logout" onClick={logout}>

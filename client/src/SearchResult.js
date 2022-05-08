@@ -245,9 +245,9 @@ export default function SearchResult() {
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
-                        <div className="classifier">
+                        {/* <div className="classifier">
                             <div className="classfilter">User Oriented:</div>
-                        </div>
+                        </div> */}
                         <div className="filter_button" onClick={findByPopularity}>
                             <div className="filter">Most Viewed</div>
                         </div>
@@ -275,14 +275,11 @@ export default function SearchResult() {
                                 </select>
                             </form>
                         </div>
-                        <div className="classifier">
+                        {/* <div className="classifier">
                             <div className="classfilter">Community:</div>
-                        </div>
+                        </div> */}
                         <div className="filter_button" onClick={findFriends}>
                             <div className="filter">Friends</div>
-                        </div>
-                        <div className="filter_button" onClick={findByAvgScore}>
-                            <div className="filter">Score upon Completion</div>
                         </div>
                     </div>
                 </div>

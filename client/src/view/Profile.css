@@ -71,6 +71,32 @@
     justify-content: center;
 }
 
+.completionList {
+    display: block;
+    background: #F5FFFE;
+    margin-top: 10px;
+    padding: 17px;
+    margin-left: -50px;
+    padding-left: 50px;
+    font-weight: 600;
+    font-size: 24px;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.completeImg img {
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    margin: 10px;
+}
+
+
 .commentHistoryUnit {
     display: flex;
     flex-direction: row;

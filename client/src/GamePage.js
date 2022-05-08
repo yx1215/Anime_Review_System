@@ -14,6 +14,7 @@ const link = 'http://localhost:8080';
 
 async function getGameInfo(id) {
     const info = await axios.get(`${link}/animation?id=${id}`).catch((err) => { console.log(err); });
+    console.log(info);
     return info.data.results[0];
 }
 
@@ -24,9 +25,9 @@ async function getGameComments(id) {
 }
 
 async function getGameScore(id) {
-    const info = await axios.get(`${link}/comments/anime?animeid=${id}`).catch((err) => { console.log(err); });
+    const info = await axios.get(`${link}/anime/avg?animeId=${id}`).catch((err) => { console.log(err); });
     console.log(info);
-    return info.data.results;
+    return info.data.result;
 }
 
 function getUserInfo(id) {
@@ -45,6 +46,7 @@ export default function GamePage() {
     const [page, setPage] = useState(1);
     const [pagesize, setPagesize] = useState(3);
 
+
     if (!window.sessionStorage.getItem('username')) {
         window.location.replace("/login");
     } else {
@@ -55,16 +57,17 @@ export default function GamePage() {
         getGameInfo(animeId).then((result) => {
             setInfo(result);
         });
-        getGameComments(animeId).then((result) => {
-            setTotal(result.length)
-            setComments(result);
-        });
         getGameScore(animeId).then((result) => {
+            setScore(result[0]);
+        });
+        getGameComments(animeId).then((result) => {
             setTotal(result.length)
             setComments(result);
         });
     }, [])
     console.log(comments);
+
+
 
     return (
         <div className="backgroundForGamePage">
@@ -81,14 +84,35 @@ export default function GamePage() {
                     <div className="gameText">
                         <p>id:       {info.animeId}</p>
                         <p>aired:        {info.aired} </p>
-                        <p>producer:                 {info.producer} </p>
-                        <p>genre:             {info.genre}</p>
-                        <p>age_rate:      {info.age_rate}</p>
-                        <p>synopsis:       {info.synopsis}</p>
+                        <p>producer:     {info.producer} </p>
+                        <p>genre:        {info.genre}</p>
+                        <p>age_rate:     {info.age_rate}</p>
+                        <p>synopsis:     {info.synopsis}</p>
 
                     </div>
                     <div className="gameScore">
                         {info.score}
+                    </div>
+                </div>
+                <div className="gameAvgScore">
+                    <div className="avgScore">Audience Receptions</div>
+                    {/* {(score != null && score.map((one) => (
+                        <div className="scoreUnit" onClick={() => { getGameScore(one.animeId); }}>
+                            <div className="subAScore"> Audience Average Score: {one.avg_audience_score}
+                                <Rating value={one.avg_audience_score / 2} weight="20px" readonly />
+                            </div>
+                            <div className="subScore"> Average Score upon Completion: {one.avg_complete_audience_score}
+                                <Rating value={one.avg_complete_audience_score / 2} weight="20px" readonly />
+                            </div>
+                        </div>
+                    )))} */}
+                    <div className="scoreUnit">
+                        <div className="subAScore"> Audience Average Score: {score.avg_audience_score}
+                            {/* <Rating value={score.avg_audience_score / 2} weight="20px" readonly /> */}
+                        </div>
+                        <div className="subScore"> Average Score upon Completion: {score.avg_complete_audience_score}
+                            {/* <Rating value={score.avg_complete_audience_score / 2} weight="20px" readonly /> */}
+                        </div>
                     </div>
                 </div>
                 <div className="gameComments">

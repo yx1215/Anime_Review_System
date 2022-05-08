@@ -23,21 +23,14 @@
 .homepage {
     position: absolute;
     left: 80%;
-<<<<<<< HEAD
-    top: 26%;
-=======
     top: 16%;
->>>>>>> 95833d5b653c7ea51c811e3c2dc963095c07c230
     font-size: 36px;
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: 400;
 }
-<<<<<<< HEAD
 
-.logout {
-=======
-.homepage{
+.homepage {
     position: absolute;
     left: 80%;
     top: 26%;
@@ -47,8 +40,7 @@
     font-weight: 400;
 }
 
-.logout{
->>>>>>> 95833d5b653c7ea51c811e3c2dc963095c07c230
+.logout {
     position: absolute;
     left: 85%;
     top: 36%;
@@ -58,11 +50,7 @@
     font-weight: 400;
 }
 
-<<<<<<< HEAD
 .inputSmall {
-=======
-.inputSmall{
->>>>>>> 95833d5b653c7ea51c811e3c2dc963095c07c230
     width: 400px;
     height: 40px;
     background: #EEF2F1;
