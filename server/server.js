@@ -72,6 +72,8 @@ app.get("/recommend_friends", routes.friend_recommendation);
 
 app.get("/user/fav_genres", routes.user_favourite_genre);
 
+app.get("/user/percen_complete", routes.percentage_complete_like);
+
 app.get("/anime/avg", routes.get_avg_score)
 app.listen(config.server_port, () => {
 	console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
