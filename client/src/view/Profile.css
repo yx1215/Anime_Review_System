@@ -62,7 +62,7 @@
 .friendList {
     display: flex;
     flex-direction: row;
-    background: #F5FFFE;
+    background: #f0fbfd;
     margin-top: 10px;
     padding: 17px;
     margin-left: -50px;

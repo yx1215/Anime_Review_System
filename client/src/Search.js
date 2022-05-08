@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './view/Search.css'
-import { Route, useHistory } from "react-router-dom";
-import SearchResult from './SearchResult';
-import Login from './Login';
-import Register from './Register';
 
 let username;
+
+function logout(){
+    window.sessionStorage.clear();
+    window.location.replace(`/login`)
+}
 export default function Search() {
     const [input, setInput] = useState("");
     // async function helper(){
@@ -58,7 +59,13 @@ export default function Search() {
     return (
         <div className="body">
             <div className="username">
-                {username}
+                Login As: {username}
+            </div>
+            <div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>
+                My Home Page
+            </div>
+            <div className="logout" onClick={logout}>
+                Logout
             </div>
             <div className="title">
                 AniME
@@ -73,13 +80,13 @@ export default function Search() {
                 <div className="optionUnit">
                     {/* <Route path="/login" component={Login} />
                     <div className="text" type="button" onClick={handleLogin} >login</div> */}
-                    <div className="text" ><a href="/login">login</a></div>
+                    <div className="text"><a href="/login">login</a></div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
                     {/* <Route path="/register" component={Register} /> */}
                     {/* <div className="text" type="button" onClick={handleRegister}>register</div> */}
-                    <div className="text" ><a href="/register">register</a></div>
+                    <div className="text"><a href="/register">register</a></div>
                     <div className="line"></div>
                 </div>
             </div>

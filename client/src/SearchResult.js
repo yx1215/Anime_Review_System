@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './view/SearchResult.css';
 import Logo from './Logo';
-import avatar from './image/woman.jpeg';
-import anime from './image/anime.jpeg';
-import FilterButton from './FilterButton';
 import axios from "axios";
 import ResultUnit from "./resultUnit";
 import UserResultUnit from "./UserResultUnit";
-import FriendResultUnit from "./FriendResultUnit";
+import './view/FilterButton.css';
 import { Pagination } from 'antd';
 import 'antd/dist/antd.min.css'
 
@@ -24,6 +21,11 @@ let animePopularity;
 let friend;
 let user;
 let avgScore;
+
+function logout() {
+    window.sessionStorage.clear();
+    window.location.replace(`/login`)
+}
 
 async function getGame() {
     let url = `${link}/search/animations?`;
@@ -69,19 +71,6 @@ async function getUsers() {
     return result;
 }
 
-async function getFriends() {
-    let result = [];
-    let url = `${link}/recommend_friends?userId=${friend}`;
-    const info2 = await axios.get(url).catch((err) => { console.log(err); });
-    if (info2.data.error || info2.data.results.length === 0) {
-        console.log(info2);
-    } else {
-        result = result.concat(info2.data.results);
-    }
-    // result+=info2.data.results;
-    return result;
-}
-
 async function getGameBasedOnTime() {
     let url = `${link}/animations/sort_aired`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
@@ -97,20 +86,6 @@ async function getGameBasedOnScore() {
 }
 
 async function getGameBasedOnPopularity() {
-    let url = `${link}/animations/sort_most_viewed`;
-    const info = await axios.get(url).catch((err) => { console.log(err); });
-    console.log(info);
-    return info.data.results;
-}
-
-async function getGameBasedOnRecommendation() {
-    let url = `${link}/recommend_friends`;
-    const info = await axios.get(url).catch((err) => { console.log(err); });
-    console.log(info);
-    return info.data.results;
-}
-
-async function getGameBasedOnAvgScore() {
     let url = `${link}/animations/sort_most_viewed`;
     const info = await axios.get(url).catch((err) => { console.log(err); });
     console.log(info);
@@ -134,7 +109,6 @@ export default function SearchResult() {
 
     const [game, setGame] = useState([]);
     const [users, setUsers] = useState([]);
-    const [friends, setFriends] = useState([]);
     const [genre, setGenre] = useState(null);
     const [producer, setProducer] = useState(null);
     const [input, setInput] = useState("");
@@ -173,23 +147,6 @@ export default function SearchResult() {
                 setGame(result);
                 setTotal(result.length);
                 setInput("Popularity=1;");
-            })
-            // } else if (recommendation === "1") {
-            //     getGameBasedOnRecommendation().then((result) => {
-            //         setFriends(result);
-            //         setInput("Recommendation=1;");
-            //     })
-        } else if (avgScore === "1") {
-            getGameBasedOnAvgScore().then((result) => {
-                setGame(result);
-                setTotal(result.length);
-                setInput("avgScore=1;");
-            })
-        } else if (friend != null) {
-            getFriends().then((result) => {
-                setFriends(result);
-                setTotal(result.length)
-                setInput("Friendof=" + friend + ";");
             })
         } else {
             getGame().then((result) => {
@@ -239,15 +196,6 @@ export default function SearchResult() {
     function findByPopularity(e) {
         console.log(e.target.value);
         window.location.replace(`/searchResult?Popularity=1`);
-    }
-
-    // function findByReccomendation(e) {
-    //     console.log(e.target.value);
-    //     window.location.replace(`/searchResult?Recommendation=1`);
-    // }
-    function findByAvgScore(e) {
-        console.log(e.target.value);
-        window.location.replace(`/searchResult?AvgScore=1`);
     }
 
     function changeInput(e) {
@@ -346,9 +294,6 @@ export default function SearchResult() {
                     {(users != null && users.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <UserResultUnit userObj={one} />
                     )))}
-                    {(friends != null && friends.slice((page - 1) * pagesize, page * pagesize).map((one) => (
-                        <FriendResultUnit friendObj={one} />
-                    )))}
                     <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", paddingBottom: "20px" }}>
                         <Pagination
                             total={total}
@@ -365,7 +310,13 @@ export default function SearchResult() {
             </div>
 
             <div className="username">
-                {username}
+                Login As: {username}
+            </div>
+            <div className="homepage" onClick={() => { window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`) }}>
+                My Home Page
+            </div>
+            <div className="logout" onClick={logout}>
+                Logout
             </div>
         </div>
 

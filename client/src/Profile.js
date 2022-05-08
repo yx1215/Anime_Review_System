@@ -138,7 +138,7 @@ export default function Profile() {
                     <div className="profileName">{info.nickname}</div>
                 </div>
                 <div className="profileInfo">
-                    <div className="typeText">Favorite Anime Genre</div>
+                    <div className="typeText">Favourite Anime Genre</div>
                     <div className="profileList">
                         {(favGenre != null && favGenre.map((one, index) => (
                             <p key={index} style={{ fontSize: '20px' }}>{one}&nbsp;</p>
@@ -146,7 +146,7 @@ export default function Profile() {
                     </div>
                 </div>
                 <div className="profileInfo">
-                    <div className="typeText">Recently Liked</div>
+                    <div className="typeText">Recent Liked</div>
                     <div className="profileList">
                         {(animeInfo != null && animeInfo.map((one) => (
                             <AnimeDisplayed animeImg={one.img} name={one.name} />
@@ -154,7 +154,7 @@ export default function Profile() {
                     </div>
                 </div>
                 <div className="profileInfo">
-                    <div className="typeText">Friends Recommendation</div>
+                    <div className="typeText">Friend Recommend</div>
                     <div className="profileList">
                         {(friendInfo != null && friendInfo.map((one) => (
                             <FriendDisplayed name={one.nickname} distance={one.n} />

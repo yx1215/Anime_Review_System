@@ -5,6 +5,7 @@ import axios from "axios";
 import { ReactSession } from 'react-client-session';
 
 const link = 'http://localhost:8080';
+
 export default function Login() {
 
     const [acct, setAcct] = useState({
@@ -22,10 +23,11 @@ export default function Login() {
         e.preventDefault();
         console.log(`${link}/login`);
         return sendRegister(acct).then((value) => {
-            alert(value.data);
+            alert(value.data.message);
             console.log(value);
-            if (value.data === "log in successfully!") {
+            if (value.data.message === "log in successfully!") {
                 window.sessionStorage.setItem("username", acct.username);
+                window.sessionStorage.setItem("userId", value.data.results[0].userId);
                 window.location.replace(`/`);
             }
         }).catch((err) => {
@@ -53,10 +55,10 @@ export default function Login() {
             </div>
             <div className="Login">
                 <form onSubmit={handleNameSubmit}>
-                    <label className="User" for="uname"><b>Username</b></label>
+                    <label className="User" form="uname"><b>Username</b></label>
                     <input type="text" name="uname" required onChange={(e) => { handleUNameChange(e.target.value); }} />
 
-                    <label className="User" for="psw"><b>Password</b></label>
+                    <label className="User" form="psw"><b>Password</b></label>
                     <input type="password" name="psw" required onChange={(e) => { handlePSWChange(e.target.value); }} />
 
                     <button type="submit" className="loginButton">Log in</button>
