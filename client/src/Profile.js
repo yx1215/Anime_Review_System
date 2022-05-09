@@ -121,7 +121,7 @@ export default function Profile() {
     },
         [])
     console.log(info);
-
+    console.log(friendInfo);
     return (
         <div className="body">
             <Logo />
@@ -159,7 +159,7 @@ export default function Profile() {
                     <div className="typeText">Friend Recommend</div>
                     <div className="profileList">
                         {(friendInfo != null && friendInfo.map((one) => (
-                            <FriendDisplayed name={one.nickname} distance={one.n} />
+                            <FriendDisplayed name={one.nickname} distance={one.n} gender={one.gender} />
                         )))}
                     </div>
                 </div>

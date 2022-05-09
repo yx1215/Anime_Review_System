@@ -236,7 +236,7 @@ async function find_comments_for_anime(req, res) {
         console.log(animeid)
         connection.query(
             `
-            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating
+            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating, RU.gender
             FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId
                          JOIN RegisteredUser RU ON R.userId = RU.userId
             WHERE A.animeID = ${animeid}
@@ -586,9 +586,9 @@ async function friend_recommendation(req, res) {
        FROM ONE_CONNECT OC1 JOIN ONE_CONNECT_TOTAL OC2 ON OC1.ID2=OC2.ID1
        WHERE OC1.ID1 <> OC2.ID2 AND (OC2.ID2 NOT IN (SELECT ID2 FROM ONE_CONNECT)) LIMIT 3
    )
-    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 3)
+    (SELECT RegisteredUser.nickname AS nickname, RegisteredUser.gender AS gender, ID2 AS ID, 1 AS n FROM ONE_CONNECT JOIN RegisteredUser ON ONE_CONNECT.ID2=RegisteredUser.userId LIMIT 3)
     UNION
-    (SELECT RegisteredUser.nickname AS nickname, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
+    (SELECT RegisteredUser.nickname AS nickname, RegisteredUser.gender AS gender, ID2 AS ID, 2 AS n FROM TWO_CONNECT JOIN RegisteredUser ON TWO_CONNECT.ID2=RegisteredUser.userId)
     `
     connection.query(query,
         function (error, results, fields) {

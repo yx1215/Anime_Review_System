@@ -60,6 +60,9 @@
 
 .commentAnime{
     font-size: 30px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 .commentHistoryUnit{
     border: 1px dashed #ADD8E6;
