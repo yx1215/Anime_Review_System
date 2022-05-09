@@ -11,6 +11,7 @@
   "devDependencies": {
     "bcrypt": "^5.0.1",
     "express-session": "^1.17.2",
+    "google-auth-library": "^8.0.2",
     "jest": "^27.1.0",
     "mysql2": "^2.3.3"
   },

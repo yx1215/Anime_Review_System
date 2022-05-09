@@ -1,5 +1,5 @@
 // import './view/App.css';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     BrowserRouter,
     Route,
@@ -11,8 +11,8 @@ import SearchResult from './SearchResult';
 import Register from './Register';
 import Profile from "./Profile";
 import Login from "./Login";
-
 function App() {
+
     return (
         <BrowserRouter>
             <Route exact path="/" component={Search} />

@@ -65,7 +65,12 @@ export default function Register() {
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text" id="longSentence"><a href="/login">Have account already? Login</a></div>
+                    <div className="text" id="longSentence"><a href="/login" style={{color: 'black', textDecoration:'none'}}>Have account already? Login</a></div>
+                    <div className="line"></div>
+                </div>
+                <div className="optionUnit">
+                    <div className="text"><a href="https://www.privacypolicies.com/live/1f182c75-4612-433e-8933-8efb40a9d7d9"
+                                             style={{color: 'black', textDecoration:'none'}}>privacy</a></div>
                     <div className="line"></div>
                 </div>
             </div>

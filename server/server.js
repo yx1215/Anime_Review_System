@@ -6,7 +6,6 @@ var cors = require('cors')
 const routes = require('./routes')
 const config = require('./config.json')
 const session = require("express-session");
-
 const app = express();
 
 app.use(express.urlencoded({
@@ -21,7 +20,7 @@ app.use(session({
 
 // homework routes
 // whitelist localhost 3000
-app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
+app.use(cors({ credentials: true, origin: ['https://localhost:3000'] }));
 
 
 app.post('/login', routes.loginHandler);
