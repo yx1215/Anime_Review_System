@@ -98,8 +98,8 @@
     margin-right: 30px;
 }
 
-.resultUnit{
-    border:1px dashed #ADD8E6;
+.resultUnit {
+    border: 1px dashed #ADD8E6;
     align-items: stretch;
     display: flex;
     flex-direction: row;
@@ -140,4 +140,3 @@
 .searchButtonSmall:hover {
     cursor: pointer;
 }
-

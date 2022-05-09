@@ -166,7 +166,7 @@ export default function Profile() {
     }
 
     console.log(comments);
-    useEffect(()=>{
+    useEffect(() => {
         getUserInfo(userId).then((result) => {
             setInfo(result[0]);
             if (result[0].gender === "Male") {
@@ -269,10 +269,10 @@ export default function Profile() {
                 <div className="profileInfo">
                     <div className="typeText">Recently Commented</div>
                     {(comments != null && comments.slice((page - 1) * pagesize, page * pagesize).map((one) => (
-                        <div className="commentHistoryUnit" onClick={()=>{redirectToAnime(one.animeId)}}>
+                        <div className="commentHistoryUnit" onClick={() => { redirectToAnime(one.animeId) }}>
                             <div className="commentAnime">
                                 <div>{one.title}</div>
-                                <Rating value={one.rating/2} weight="20px" readonly/>
+                                <Rating value={one.rating / 2} weight="20px" readonly />
                             </div>
                             <div className="commentHistoryText">{one.comments}</div>
                         </div>
