@@ -11,6 +11,7 @@ import axios from "axios";
 import ResultUnit from "./resultUnit";
 import { Pagination } from 'antd';
 import 'antd/dist/antd.min.css'
+import Rating from "react-star-rating-lite";
 
 let userId;
 let avatar;
@@ -91,6 +92,7 @@ export default function Profile() {
     }else{
         username = window.sessionStorage.getItem('username');
     }
+    console.log(comments);
     useEffect(()=>{
         getUserInfo(userId).then((result) => {
             setInfo(result[0]);
@@ -124,11 +126,11 @@ export default function Profile() {
         <div className="body">
             <Logo />
             <div className="username">
-                Login As: {username}
+                Hello! {username}
             </div>
-            <div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>
-                My Home Page
-            </div>
+            {/*<div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>*/}
+            {/*    My Home Page*/}
+            {/*</div>*/}
             <div className="logout" onClick={logout}>
                 Logout
             </div>
@@ -141,7 +143,7 @@ export default function Profile() {
                     <div className="typeText">Favourite Anime Genre</div>
                     <div className="profileList">
                         {(favGenre != null && favGenre.map((one, index) => (
-                            <p key={index} style={{fontSize: '20px'}}>{one}&nbsp;</p>
+                            <ul key={index} style={{fontSize: '26px'}}>{one}&nbsp;</ul>
                         )))}
                     </div>
                 </div>
@@ -166,11 +168,9 @@ export default function Profile() {
                     <div className="typeText">Recent Commented</div>
                     {(comments != null && comments.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <div className="commentHistoryUnit" onClick={()=>{redirectToAnime(one.animeId)}}>
-                            <div>
-                                <img src={avatar}/>
-                                <div>Anime: {one.title}</div>
-                                <div>Rating: {one.rating}</div>
-
+                            <div className="commentAnime">
+                                <div>{one.title}</div>
+                                <Rating value={one.rating/2} weight="20px" readonly/>
                             </div>
                             <div className="commentHistoryText">{one.comments}</div>
                         </div>

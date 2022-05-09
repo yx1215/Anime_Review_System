@@ -155,13 +155,12 @@ export default function SearchResult() {
                 }
                 if (animeGenre) {
                     // filter.Genre = animeGenre;
-                    setInput(prevState => prevState + "Genre=" + animeGenre + ";");
+                    setInput("Genre=" + animeGenre + ";");
                 }
                 if (animeProducer) {
                     // filter.Producer = animeProducer;
-                    setInput(prevState => prevState + "Producer=" + animeProducer + ";");
+                    setInput("Producer=" + animeProducer + ";");
                 }
-
             });
         }
     }, [])
@@ -171,13 +170,6 @@ export default function SearchResult() {
         setGenre(e.target.value);
         // filter.Genre = e.target.value;
         setInput(input + "Genre=" + e.target.value + ";");
-    }
-
-    function handleProducer(e) {
-        setProducer(e.target.value);
-        console.log(e.target.value);
-        // filter.Producer = e.target.value;
-        setInput(input + "Producer=" + e.target.value + ";");
     }
 
     function findByTime(e) {
@@ -226,9 +218,8 @@ export default function SearchResult() {
     function findUser() {
         setInput("User=");
     }
-
-    function findFriends() {
-        setInput("Friendof=");
+    function findProducer(){
+        setInput("Producer=");
     }
 
     return (
@@ -254,11 +245,13 @@ export default function SearchResult() {
                         <div className="filter_button" onClick={findUser}>
                             <div className="filter">User</div>
                         </div>
-                        <div className="filter_button">
-                            <select name="genre" id="genre" onChange={handleProducer}>
-                                <option value="Producer">Producer</option>
-                                <option value="saab">Saab</option>
-                            </select>
+                        <div className="filter_button" onClick={findProducer}>
+                            <div className="filter">Producer</div>
+                            {/*<select name="genre" id="genre" onChange={handleProducer}>*/}
+                            {/*    <option value="Producer">Producer</option>*/}
+                            {/*    <option value="saab">Saab</option>*/}
+                            {/*    */}
+                            {/*</select>*/}
                         </div>
                         <div className="filter_button">
                             <form action="/">
@@ -266,6 +259,27 @@ export default function SearchResult() {
                                     <option value="Genre">Genre</option>
                                     <option value="Action">Action</option>
                                     <option value="Comedy">Comedy</option>
+                                    <option value="Adventure">Adventure</option>
+                                    <option value="Drama">Drama</option>
+                                    <option value="Sci-Fi">Sci-Fi</option>
+                                    <option value="Space">Space</option>
+                                    <option value="Mystery">Mystery</option>
+                                    <option value="Shounen">Shounen</option>
+                                    <option value="Police">Police</option>
+                                    <option value="Supernatural">Supernatural</option>
+                                    <option value="Magic">Magic</option>
+                                    <option value="Fantasy">Fantasy</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Josei">Josei</option>
+                                    <option value="Romance">Romance</option>
+                                    <option value="Slice of Life">Slice of Life</option>
+                                    <option value="Horror">Horror</option>
+                                    <option value="Psychological">Psychological</option>
+                                    <option value="Game">Game</option>
+                                    <option value="Music">Music</option>
+                                    <option value="Historical">Historical</option>
+                                    <option value="Hentai">Hentai</option>
+                                    <option value="Kids">Kids</option>
                                 </select>
                                 {/*<input type="submit" value="Submit" />*/}
                             </form>
@@ -296,11 +310,11 @@ export default function SearchResult() {
             </div>
 
             <div className="username">
-                Login As: {username}
+                Hello! {username}
             </div>
-            <div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>
-                My Home Page
-            </div>
+            {/*<div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>*/}
+            {/*    My Home Page*/}
+            {/*</div>*/}
             <div className="logout" onClick={logout}>
                 Logout
             </div>
