@@ -71,16 +71,16 @@ async function loginHandler(req, res) {
                     if (results.length > 0) {
                         const pwdHash = results[0].password
                         const validPassword = await bcrypt.compare(password, pwdHash);
-                        if (validPassword){
+                        if (validPassword) {
                             req.session.login = true;
                             req.session.userId = results[0].userId;
-                            res.json({message: "log in successfully!", results: results});
+                            res.json({ message: "log in successfully!", results: results });
                         } else {
-                            res.json({message: "Invalid password for username: " + username});
+                            res.json({ message: "Invalid password for username: " + username });
                         }
 
                     } else {
-                        res.json({message: `Username ${username} does not exist.`});
+                        res.json({ message: `Username ${username} does not exist.` });
                     }
                 }
             })
@@ -457,17 +457,17 @@ async function animations_sort_producer_aired(req, res) {
                   AP.producers LIKE '%${producer}%'
             ORDER BY aired DESC, A2.title
             `, function (error, results, field) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else {
+            if (results) {
+                res.json({ results: results })
             } else {
-                if (results) {
-                    res.json({ results: results })
-                } else {
-                    res.json({ results: [] })
-                }
+                res.json({ results: [] })
             }
-        })
+        }
+    })
 }
 
 
@@ -601,7 +601,7 @@ async function friend_recommendation(req, res) {
         })
 }
 
-async function user_favourite_genre(req, res){
+async function user_favourite_genre(req, res) {
     const userId = req.query.userId;
     let query = `
     WITH TEMP_GENRE AS (
@@ -623,17 +623,17 @@ async function user_favourite_genre(req, res){
     WHERE FG.num_genres > 1 AND FG.rank_genres <= 2 AND FG.userId=${userId};`
 
     connection.query(query,
-        function(error, results, fields){
-        if (error){
-            console.log(error)
-            res.json({error: error})
-        } else {
-            res.json({results: results})
-        }
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ error: error })
+            } else {
+                res.json({ results: results })
+            }
         })
 }
 
-async function make_comments(req, res){
+async function make_comments(req, res) {
     const userId = req.query.userId;
     const animeId = req.query.animeId;
     const comment = req.query.comment;
@@ -641,28 +641,57 @@ async function make_comments(req, res){
     connection.query(`
     SELECT * FROM ReviewedBy WHERE userId=? AND animeId=?;`, [userId, animeId]
         ,
-        function(error, results, fields){
-        if (error){
-            console.log(error)
-            res.json({message: error})
-        } else {
-            if (results.length > 0){
-                res.json({message: `You have commented Anime with Id ${animeId}`})
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ message: error })
             } else {
-                connection.query(`INSERT INTO ReviewedBy VALUE (?, ?, ?, ?);`, [userId, animeId, comment, rating],
-                    function (error, results, fields) {
-                        if (error){
-                            res.json({message: error})
-                        } else {
-                            res.json({message: "Comment Successful."})
-                        }
-                    })
+                if (results.length > 0) {
+                    res.json({ message: `You have commented Anime with Id ${animeId}` })
+                } else {
+                    connection.query(`INSERT INTO ReviewedBy VALUE (?, ?, ?, ?);`, [userId, animeId, comment, rating],
+                        function (error, results, fields) {
+                            if (error) {
+                                res.json({ message: error })
+                            } else {
+                                res.json({ message: "Comment Successful." })
+                            }
+                        })
+                }
             }
-        }
         })
 }
 
-async function get_avg_score(req, res){
+async function make_comments(req, res) {
+    const userId = req.query.userId;
+    const animeId = req.query.animeId;
+    const comment = req.query.comment;
+    const rating = req.query.rating;
+    connection.query(`
+    SELECT * FROM ReviewedBy WHERE userId=? AND animeId=?;`, [userId, animeId]
+        ,
+        function (error, results, fields) {
+            if (error) {
+                console.log(error)
+                res.json({ message: error })
+            } else {
+                if (results.length > 0) {
+                    res.json({ message: `You have commented Anime with Id ${animeId}` })
+                } else {
+                    connection.query(`INSERT INTO ReviewedBy VALUE (?, ?, ?, ?);`, [userId, animeId, comment, rating],
+                        function (error, results, fields) {
+                            if (error) {
+                                res.json({ message: error })
+                            } else {
+                                res.json({ message: "Comment Successful." })
+                            }
+                        })
+                }
+            }
+        })
+}
+
+async function get_avg_score(req, res) {
     const animeId = req.query.animeId;
     let query = `WITH
     COMPLETE_WATCH_ANIME AS (
@@ -691,20 +720,21 @@ async function get_avg_score(req, res){
     WHERE A.animeId = RA.animeId AND RA.animeId = CA.animeID;`
 
     connection.query(query,
-        function(error, result, fields){
-        if (error){
-            res.json({error: error})
-        } else {
-            res.json({result: result})
-        }
+        function (error, result, fields) {
+            if (error) {
+                res.json({ error: error })
+            } else {
+                res.json({ result: result })
+            }
         })
 }
 
-async function percentage_complete_like(req, res){
+
+async function percentage_complete_like(req, res) {
     const userId = req.query.userId;
     console.log(userId)
-    if(userId){
-    let query = `WITH t1 as (
+    if (userId) {
+        let query = `WITH t1 as (
         SELECT u.userId, w.animeId
         FROM User u
         JOIN Watched w on u.userId = w.userid
@@ -725,14 +755,14 @@ async function percentage_complete_like(req, res){
         FROM t3
         GROUP BY userId;`
 
-    connection.query(query,
-        function(error, result, fields){
-        if (error){
-            res.json({error: error})
-        } else {
-            res.json({result: result})
-        }
-        })
+        connection.query(query,
+            function (error, result, fields) {
+                if (error) {
+                    res.json({ error: error })
+                } else {
+                    res.json({ result: result })
+                }
+            })
     }
 }
 module.exports = {

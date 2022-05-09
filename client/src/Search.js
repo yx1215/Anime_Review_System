@@ -3,7 +3,7 @@ import './view/Search.css'
 
 let username;
 
-function logout(){
+function logout() {
     window.sessionStorage.clear();
     window.location.replace(`/login`);
 }
@@ -12,7 +12,7 @@ export default function Search() {
     // async function helper(){
     //     return await axios.get(`${link}/`).catch((err) => { console.log(err); });
     // }
-    if(!window.sessionStorage.getItem('username')){
+    if (!window.sessionStorage.getItem('username')) {
         window.location.replace("/login");
     }
     username = window.sessionStorage.getItem('username');
@@ -41,7 +41,6 @@ export default function Search() {
         <div className="body">
             <div className="username">
                 Hello! {username}
-
             </div>
             {/*<div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>*/}
             {/*    My Home Page*/}

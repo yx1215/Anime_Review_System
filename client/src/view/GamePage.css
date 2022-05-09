@@ -5,13 +5,13 @@
     src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
 }
 
-.backgroundForGamePage{
+.backgroundForGamePage {
     background-color: #FBFFFD;
     display: flex;
     height: 100vh;
 }
 
-.avatar img{
+.avatar img {
     display: flex;
     height: 70px;
     width: 70px;
@@ -21,7 +21,7 @@
     border-radius: 50px;
 }
 
-.gameInformation{
+.gameInformation {
     display: flex;
     flex-direction: column;
     width: 80%;
@@ -30,7 +30,7 @@
     left: 80px;
 }
 
-.gameName{
+.gameName {
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: 400;
@@ -38,14 +38,14 @@
     margin-bottom: 100px;
 }
 
-.gameDetails{
+.gameDetails {
     display: flex;
     height: 400px;
     width: 100%;
     margin-bottom: 50px;
 }
 
-.gameImage img{
+.gameImage img {
     display: flex;
     width: 337px;
     height: 405px;
@@ -54,14 +54,16 @@
     align-items: center;
     object-fit: cover;
 }
-.gameText{
+
+.gameText {
     display: flex;
     margin-left: 66px;
     flex-direction: column;
     justify-content: center;
     right: 70px;
 }
-.gameScore{
+
+.gameScore {
     position: absolute;
     width: 150px;
     height: 150px;
@@ -75,19 +77,66 @@
     font-family: 'Cormorant Regular';
 }
 
-.gameComments{
+.gameComments {
     display: flex;
     flex-direction: column;
 }
 
-.comments{
+.comments {
     font-family: 'Cormorant Regular';
     font-style: normal;
     font-weight: 400;
     font-size: 36px;
     /*overflow: auto;*/
 }
-.gameCommentUnit{
+
+.gameAvgScore {
+    /* font-family: 'Cormorant Regular'; */
+    display: flex;
+    flex-direction: column;
+    display: block;
+    font-size: 20px;
+    font-weight: 200;
+
+    /* margin-bottom: 30px; */
+
+}
+
+.subAScore {
+    /* font-family: 'Cormorant Regular'; */
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    text-align: center;
+    /* margin-top: 20px; */
+    /*overflow: auto;*/
+}
+
+.subScore {
+    /* font-family: 'Cormorant Regular'; */
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    /*overflow: auto;*/
+}
+
+.scoreUnit {
+    background-color: #C0D8CC;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.avgScore {
+    font-family: 'Cormorant Regular';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    /*overflow: auto;*/
+}
+
+.gameCommentUnit {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -96,20 +145,21 @@
     padding: 30px;
 }
 
-.gameCommentUnit img{
+.gameCommentUnit img {
     width: 60px;
     height: 60px;
     border-radius: 50px;
 }
 
-.userCol{
+.userCol {
     width: 20%;
     overflow-wrap: break-word;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.commentText{
+
+.commentText {
     width: 80%;
 
 }

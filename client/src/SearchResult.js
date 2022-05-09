@@ -20,8 +20,9 @@ let animeScore;
 let animePopularity;
 let friend;
 let user;
+let avgScore;
 
-function logout(){
+function logout() {
     window.sessionStorage.clear();
     window.location.replace(`/login`)
 }
@@ -103,7 +104,9 @@ export default function SearchResult() {
     animeScore = params.get('Score');
     animePopularity = params.get('Popularity');
     user = params.get('User');
-    friend = params.get('Friendof')
+    avgScore = params.get('AvgScore');
+    friend = params.get('Friendof');
+
     const [game, setGame] = useState([]);
     const [users, setUsers] = useState([]);
     const [genre, setGenre] = useState(null);
@@ -115,7 +118,7 @@ export default function SearchResult() {
     const [page, setPage] = useState(1);
     const [pagesize, setPagesize] = useState(10);
 
-    if(!window.sessionStorage.getItem('username')){
+    if (!window.sessionStorage.getItem('username')) {
         window.location.replace("/login");
     }
 
@@ -125,7 +128,7 @@ export default function SearchResult() {
             getUsers().then((result) => {
                 setUsers(result);
                 setTotal(result.length);
-                setInput("User="+user+";");
+                setInput("User=" + user + ";");
             })
         } else if (animeNew === '1') {
             getGameBasedOnTime().then((result) => {
@@ -200,8 +203,8 @@ export default function SearchResult() {
             window.location.replace(`/searchResult?Score=1`);
         } else if (input === "Popularity=1;") {
             window.location.replace(`/searchResult?Popularity=1`);
-            // } else if (input === "Recommendation=1;") {
-            //     window.location.replace(`/searchResult?Recommendation=1`);
+        } else if (input === "AvgScore=1;") {
+            window.location.replace(`/searchResult?AvgScore=1`);
         }
         var varibles = input.split(";");
         for (var i = 0; i < varibles.length; i++) {
@@ -233,6 +236,9 @@ export default function SearchResult() {
                         <button className="searchButtonSmall" onClick={searchFunction}>find your love</button>
                     </div>
                     <div className="searchFilter">
+                        {/* <div className="classifier">
+                            <div className="classfilter">User Oriented:</div>
+                        </div> */}
                         <div className="filter_button" onClick={findByPopularity}>
                             <div className="filter">Most Viewed</div>
                         </div>
@@ -281,29 +287,34 @@ export default function SearchResult() {
                                     <option value="Hentai">Hentai</option>
                                     <option value="Kids">Kids</option>
                                 </select>
-                                {/*<input type="submit" value="Submit" />*/}
                             </form>
+                        </div>
+                        {/* <div className="classifier">
+                            <div className="classfilter">Community:</div>
+                        </div> */}
+                        <div className="filter_button" onClick={findFriends}>
+                            <div className="filter">Friends</div>
                         </div>
                     </div>
                 </div>
 
                 <div className="searchResult" >
                     {(game != null && game.slice((page - 1) * pagesize, page * pagesize).map((one) => (
-                        <ResultUnit gameObj={one}/>
-                        )))}
-                    {(users != null && users.slice((page - 1) * pagesize, page * pagesize).map((one) => (
-                        <UserResultUnit userObj={one}/>
+                        <ResultUnit gameObj={one} />
                     )))}
-                    <div style={{display: "flex", flexDirection: "row", justifyContent:"center", paddingBottom: "20px"}}>
+                    {(users != null && users.slice((page - 1) * pagesize, page * pagesize).map((one) => (
+                        <UserResultUnit userObj={one} />
+                    )))}
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", paddingBottom: "20px" }}>
                         <Pagination
-                        total={total}
-                        showSizeChanger
-                        showTotal={total => `Total ${total} items`}
-                        onChange={(page, pagesize) => {
-                            setPage(page);
-                            setPagesize(pagesize);
-                        }}
-                      />
+                            total={total}
+                            showSizeChanger
+                            showTotal={total => `Total ${total} items`}
+                            onChange={(page, pagesize) => {
+                                setPage(page);
+                                setPagesize(pagesize);
+                            }}
+                        />
                     </div>
                 </div>
 

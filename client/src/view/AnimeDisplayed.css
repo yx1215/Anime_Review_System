@@ -1,16 +1,33 @@
-.animeDisplayed{
+.animeDisplayed {
     margin-left: 25px;
     margin-right: 25px;
 }
-.animeDisplayed img{
+
+.animeDisplayed img {
     width: 176px;
     height: 199px;
 }
 
-.animeNameDisplayed{
+.animeNameDisplayed {
     text-align: center;
     margin-top: 5px;
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
+}
+
+.friendNameDisplayed {
+    text-align: center;
+    margin-top: 5px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+}
+
+.friendDegreeDisplayed {
+    text-align: center;
+    margin-top: 5px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
 }
