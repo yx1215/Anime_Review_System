@@ -7,6 +7,7 @@ function logout() {
     window.sessionStorage.clear();
     window.location.replace(`/login`);
 }
+
 export default function Search() {
     const [input, setInput] = useState("");
     // async function helper(){
@@ -61,13 +62,21 @@ export default function Search() {
                 <div className="optionUnit">
                     {/* <Route path="/login" component={Login} />
                     <div className="text" type="button" onClick={handleLogin} >login</div> */}
-                    <div className="text"><a href="/login" style={{color: 'black'}}>login</a></div>
+                    <div className="text"><a href="/login" style={{color: 'black', textDecoration:'none'}}>login</a></div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
                     {/* <Route path="/register" component={Register} /> */}
                     {/* <div className="text" type="button" onClick={handleRegister}>register</div> */}
-                    <div className="text"><a href="/register" style={{color: 'black'}}>register</a></div>
+                    <div className="text"><a href="/register" style={{color: 'black',
+                        textDecoration:'none'}}>register</a></div>
+                    <div className="line"></div>
+                </div>
+                <div className="optionUnit">
+                    {/* <Route path="/register" component={Register} /> */}
+                    {/* <div className="text" type="button" onClick={handleRegister}>register</div> */}
+                    <div className="text"><a href="https://www.privacypolicies.com/live/1f182c75-4612-433e-8933-8efb40a9d7d9"
+                     style={{color: 'black', textDecoration:'none'}}>privacy</a></div>
                     <div className="line"></div>
                 </div>
             </div>

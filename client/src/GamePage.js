@@ -7,6 +7,9 @@ import anime from './image/anime.jpeg';
 import Rating from 'react-star-rating-lite';
 import { Pagination } from "antd";
 import 'antd/dist/antd.min.css'
+import male from "./image/male.jpeg";
+import female from "./image/woman.jpeg";
+import unknown from "./image/unknown.jpeg";
 
 let animeId = null;
 let username;
@@ -18,7 +21,30 @@ async function getGameInfo(id) {
     return info.data.results[0];
 }
 
-async function getGameComments(id) {
+function logout(){
+    window.sessionStorage.clear();
+    window.location.replace(`/login`)
+}
+
+function getAvatar(gender) {
+    let avatar;
+    if (gender === 'Male') {
+        avatar = male;
+    } else if (gender === 'Female') {
+        avatar = female;
+    } else {
+        avatar = unknown;
+    }
+    return avatar;
+}
+
+async function makeComments(userId, animeId, comment, rating){
+    const info = await axios.post(`${link}/comments/anime?userId=${userId}&animeId=${animeId}&comment=${comment}&rating=${rating}`).catch((err) => { console.log(err); });
+    console.log(info);
+    return info.data;
+}
+
+async function getGameComments(id){
     const info = await axios.get(`${link}/comments/anime?animeid=${id}`).catch((err) => { console.log(err); });
     console.log(info);
     return info.data.results;
@@ -131,9 +157,9 @@ export default function GamePage() {
                     {(comments != null && comments.slice((page - 1) * pagesize, page * pagesize).map((one) => (
                         <div className="gameCommentUnit" onClick={() => { getUserInfo(one.userId); }}>
                             <div className="userCol">
-                                {/*<img src={avatar}/>*/}
-                                <div style={{ fontWeight: "bold", fontSize: "25px" }}>{one.nickname}</div>
-                                <Rating value={one.rating / 2} weight="20px" readonly />
+                                <img style={{borderRadius:'50%', width: '100px', height: '100px'}} src={getAvatar(one.gender)} />
+                                <div style={{fontWeight: "bold", fontSize: "25px"}}>{one.nickname}</div>
+                                <Rating value={one.rating/2} weight="20px" readonly/>
                             </div>
                             <div className="commentText">
                                 {one.comments}

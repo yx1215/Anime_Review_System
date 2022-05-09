@@ -5,26 +5,29 @@ import male from "./image/male.jpeg";
 import unknown from "./image/unknown.jpeg";
 
 let user;
-let avatar;
+function getAvatar(gender) {
+    let avatar;
+    if (gender === 'Male') {
+        avatar = male;
+    } else if (gender === 'Female') {
+        avatar = female;
+    } else {
+        avatar = unknown;
+    }
+    console.log(gender);
+    return avatar;
+}
 export default function UserResultUnit({userObj}){
     function getDetails(){
     window.location.replace(`/profile?userId=${userObj.userId}`);
     }
     useEffect(()=>{
         user = userObj;
-        if(userObj.gender==="Male"){
-            avatar=male;
-        }else if(userObj.gender==="Female"){
-            avatar=female;
-            console.log(userObj.gender);
-        }else{
-            avatar=unknown;
-        }
     })
     return(
         <div className="resultUnit" onClick={() => { getDetails(); }}>
             <div className="resultImg">
-                <img src={avatar} />
+                <img style={{borderRadius:'50%', width: '150px', height: '150px'}} src={getAvatar(userObj.gender)} />
             </div>
             <div className="resultInfo">
                 <h3 style={{fontSize: '30px'}}>{userObj.nickname}</h3>

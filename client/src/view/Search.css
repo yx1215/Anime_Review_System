@@ -76,6 +76,7 @@
     /*align-items: center;*/
     position: absolute;
     bottom: 0;
+    top: 80%;
 }
 
 .optionUnit {
@@ -106,7 +107,7 @@
 .line {
     display: flex;
     width: 0px;
-    height: 182px;
+    height: 100%;
     bottom: 0px;
     border: 1px solid #000000;
     align-items: center;

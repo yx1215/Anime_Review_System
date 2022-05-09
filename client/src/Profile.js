@@ -205,7 +205,7 @@ export default function Profile() {
     },
         [])
     console.log(info);
-
+    console.log(friendInfo);
     return (
         <div className="body">
             <Logo />

@@ -5,7 +5,6 @@ import axios from "axios";
 import { ReactSession } from 'react-client-session';
 
 const link = 'http://localhost:8080';
-
 export default function Login() {
 
     const [acct, setAcct] = useState({
@@ -67,20 +66,16 @@ export default function Login() {
 
             <div className="otherInfo">
                 <div className="optionUnit">
-                    <div className="text" >
+                    <div className="text">
                         <p>
-                            <span className="nowrap">Forget Password</span>
+                            <span className="nowrap"><a href="/register" style={{color: 'black', textDecoration:'none'}}>Register</a></span>
                         </p>
-                        {/* Forget-&nbsp;password</div> */}
                     </div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
-                    <div className="text">
-                        <p>
-                            <span className="nowrap"><a href="/register">Register</a></span>
-                        </p>
-                    </div>
+                    <div className="text"><a href="https://www.privacypolicies.com/live/1f182c75-4612-433e-8933-8efb40a9d7d9"
+                                             style={{color: 'black', textDecoration:'none'}}>privacy</a></div>
                     <div className="line"></div>
                 </div>
             </div>

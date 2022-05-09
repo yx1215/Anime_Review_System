@@ -236,7 +236,7 @@ async function find_comments_for_anime(req, res) {
         console.log(animeid)
         connection.query(
             `
-            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating
+            SELECT A.animeId, RU.userId, RU.nickname, R.comments, R.rating, RU.gender
             FROM Anime A JOIN ReviewedBy R ON A.animeId = R.animeId
                          JOIN RegisteredUser RU ON R.userId = RU.userId
             WHERE A.animeID = ${animeid}
