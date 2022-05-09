@@ -60,6 +60,11 @@ function getUserInfo(id) {
     window.location.replace(`/profile?userId=${id}`);
 }
 
+function logout() {
+    window.sessionStorage.clear();
+    window.location.replace(`/login`);
+}
+
 export default function GamePage() {
     let search = window.location.search;
     let params = new URLSearchParams(search);

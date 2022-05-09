@@ -221,7 +221,7 @@ export default function SearchResult() {
     function findUser() {
         setInput("User=");
     }
-    function findProducer(){
+    function findProducer() {
         setInput("Producer=");
     }
 
@@ -292,9 +292,9 @@ export default function SearchResult() {
                         {/* <div className="classifier">
                             <div className="classfilter">Community:</div>
                         </div> */}
-                        {/*<div className="filter_button" onClick={findFriends}>*/}
-                        {/*    <div className="filter">Friends</div>*/}
-                        {/*</div>*/}
+                        {/* <div className="filter_button" onClick={findFriends}>
+                            <div className="filter">Friends</div>
+                        </div> */}
                     </div>
                 </div>
 
