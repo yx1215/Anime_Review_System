@@ -12,6 +12,12 @@
     src: local('Cormorant Regular'), url('Cormorant-Regular.woff') format('woff');
 }
 
+.username {
+    position: absolute;
+    right: 26px;
+    top: 8px;
+}
+
 .body {
     display: flex;
     align-items: center;
