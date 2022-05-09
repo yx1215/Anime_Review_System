@@ -73,7 +73,13 @@ export default function GamePage() {
         <div className="backgroundForGamePage">
             <Logo />
             <div className="username">
-                {username}
+                Hello! {username}
+            </div>
+            {/*<div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>*/}
+            {/*    My Home Page*/}
+            {/*</div>*/}
+            <div className="logout" onClick={logout}>
+                Logout
             </div>
             <div className="gameInformation">
                 <div className="gameName">{info.title}</div>
@@ -132,6 +138,7 @@ export default function GamePage() {
                     )))}
                     <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", paddingBottom: "20px" }}>
                         <Pagination
+
                             total={total}
                             showSizeChanger
                             showTotal={total => `Total ${total} comments`}
@@ -143,6 +150,7 @@ export default function GamePage() {
                             defaultPageSize={3}
                         />
                     </div>
+
                 </div>
             </div>
         </div>

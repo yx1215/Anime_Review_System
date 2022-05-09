@@ -12,14 +12,14 @@ export default function UserResultUnit({userObj}){
     }
     useEffect(()=>{
         user = userObj;
-        // if(userObj.gender==="Male"){
-        //     avatar=male;
-        // }else if(userObj.gender==="Female"){
-        //     avatar=female;
-        //     console.log(userObj.gender);
-        // }else{
-        //     avatar=unknown;
-        // }
+        if(userObj.gender==="Male"){
+            avatar=male;
+        }else if(userObj.gender==="Female"){
+            avatar=female;
+            console.log(userObj.gender);
+        }else{
+            avatar=unknown;
+        }
     })
     return(
         <div className="resultUnit" onClick={() => { getDetails(); }}>
@@ -27,7 +27,7 @@ export default function UserResultUnit({userObj}){
                 <img src={avatar} />
             </div>
             <div className="resultInfo">
-                <h3>{userObj.nickname}</h3>
+                <h3 style={{fontSize: '30px'}}>{userObj.nickname}</h3>
                 <p>Gender: {userObj.gender}</p>
                 <p>Age: {userObj.age}</p>
                 {/*{gameObj.synopsis}*/}

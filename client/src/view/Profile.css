@@ -47,7 +47,9 @@
     font-size: 32px;
 }
 
-.profileList {
+
+.profileList{
+    border: 1px dashed #ADD8E6;
     display: flex;
     flex-direction: row;
     background: #F5FFFE;
@@ -97,9 +99,13 @@
 }
 
 
-.commentHistoryUnit {
+.commentAnime{
+    font-size: 30px;
+}
+.commentHistoryUnit{
+    border: 1px dashed #ADD8E6;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     margin-top: 30px;
 }

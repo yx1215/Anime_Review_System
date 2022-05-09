@@ -5,7 +5,7 @@ let username;
 
 function logout() {
     window.sessionStorage.clear();
-    window.location.replace(`/login`)
+    window.location.replace(`/login`);
 }
 export default function Search() {
     const [input, setInput] = useState("");
@@ -17,25 +17,6 @@ export default function Search() {
     }
     username = window.sessionStorage.getItem('username');
     console.log(username);
-    // const history = useHistory();
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     history.push("/searchresult");
-    //     window.location.replace(`/searchresult`);
-    // };
-
-    // const handleLogin = (e) => {
-    //     e.preventDefault();
-    //     history.push("/login");
-    //     window.location.replace(`/login`);
-    // };
-
-    // const handleRegister = (e) => {
-    //     e.preventDefault();
-    //     history.push("/register");
-    //     window.location.replace(`/register`);
-    // };
 
     const searchHandler = (e) => {
         setInput(e.target.value);
@@ -59,11 +40,11 @@ export default function Search() {
     return (
         <div className="body">
             <div className="username">
-                Login As: {username}
+                Hello! {username}
             </div>
-            <div className="homepage" onClick={() => { window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`) }}>
-                My Home Page
-            </div>
+            {/*<div className="homepage"  onClick={() => {window.location.replace(`/profile?userId=${window.sessionStorage.getItem("userId")}`)}}>*/}
+            {/*    My Home Page*/}
+            {/*</div>*/}
             <div className="logout" onClick={logout}>
                 Logout
             </div>
@@ -80,13 +61,13 @@ export default function Search() {
                 <div className="optionUnit">
                     {/* <Route path="/login" component={Login} />
                     <div className="text" type="button" onClick={handleLogin} >login</div> */}
-                    <div className="text"><a href="/login">login</a></div>
+                    <div className="text"><a href="/login" style={{color: 'black'}}>login</a></div>
                     <div className="line"></div>
                 </div>
                 <div className="optionUnit">
                     {/* <Route path="/register" component={Register} /> */}
                     {/* <div className="text" type="button" onClick={handleRegister}>register</div> */}
-                    <div className="text"><a href="/register">register</a></div>
+                    <div className="text"><a href="/register" style={{color: 'black'}}>register</a></div>
                     <div className="line"></div>
                 </div>
             </div>
