@@ -247,7 +247,7 @@ export default function Profile() {
                     <div className="typeText">Friend Recommendation</div>
                     <div className="profileList">
                         {(friendInfo != null && friendInfo.map((one) => (
-                            <FriendDisplayed Img={checkGender(one.gender)} name={one.nickname} distance={one.n} />
+                            <FriendDisplayed Img={checkGender(one.gender)} name={one.nickname} distance={one.n} userId={one.ID} />
                         )))}
                     </div>
                 </div>
