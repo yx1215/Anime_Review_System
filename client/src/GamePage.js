@@ -21,11 +21,6 @@ async function getGameInfo(id) {
     return info.data.results[0];
 }
 
-function logout(){
-    window.sessionStorage.clear();
-    window.location.replace(`/login`)
-}
-
 function getAvatar(gender) {
     let avatar;
     if (gender === 'Male') {
