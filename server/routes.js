@@ -662,35 +662,6 @@ async function make_comments(req, res) {
         })
 }
 
-async function make_comments(req, res) {
-    const userId = req.query.userId;
-    const animeId = req.query.animeId;
-    const comment = req.query.comment;
-    const rating = req.query.rating;
-    connection.query(`
-    SELECT * FROM ReviewedBy WHERE userId=? AND animeId=?;`, [userId, animeId]
-        ,
-        function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ message: error })
-            } else {
-                if (results.length > 0) {
-                    res.json({ message: `You have commented Anime with Id ${animeId}` })
-                } else {
-                    connection.query(`INSERT INTO ReviewedBy VALUE (?, ?, ?, ?);`, [userId, animeId, comment, rating],
-                        function (error, results, fields) {
-                            if (error) {
-                                res.json({ message: error })
-                            } else {
-                                res.json({ message: "Comment Successful." })
-                            }
-                        })
-                }
-            }
-        })
-}
-
 async function get_avg_score(req, res) {
     const animeId = req.query.animeId;
     let query = `WITH
