@@ -84,7 +84,9 @@ export default function GamePage() {
             setInfo(result);
         });
         getGameScore(animeId).then((result) => {
-            setScore(result[0]);
+            if(result.length>0){
+                setScore(result[0]);
+            }
         });
         getGameComments(animeId).then((result) => {
             setTotal(result.length)

@@ -165,7 +165,7 @@ export default function Profile() {
         username = window.sessionStorage.getItem('username');
     }
 
-    console.log(comments);
+    console.log(animeInfo);
     useEffect(() => {
         getUserInfo(userId).then((result) => {
             setInfo(result[0]);
